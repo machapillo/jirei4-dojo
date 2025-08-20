@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
+import type { Route } from "next";
 
-const tabs = [
+const tabs: { href: Route; label: string }[] = [
   { href: "/", label: "ダッシュボード" },
   { href: "/practice", label: "演習" },
   { href: "/review", label: "復習ノート" },
