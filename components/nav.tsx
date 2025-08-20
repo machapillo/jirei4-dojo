@@ -7,6 +7,7 @@ import type { Route } from "next";
 const tabs: { href: Route; label: string }[] = [
   { href: "/", label: "ダッシュボード" },
   { href: "/practice", label: "演習" },
+  { href: "/game", label: "ゲーム" },
   { href: "/review", label: "復習ノート" },
   { href: "/reference", label: "デジタル参考書" },
   { href: "/profile", label: "プロフィール" },

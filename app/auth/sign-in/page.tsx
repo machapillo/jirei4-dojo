@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, usingMock } from "@/src/lib/firebase";
@@ -14,7 +14,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -43,7 +43,7 @@ export default function SignInPage() {
             type="email"
             className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -53,7 +53,7 @@ export default function SignInPage() {
             type="password"
             className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             required
           />
         </div>

@@ -1,6 +1,9 @@
 "use client";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useUserStore } from "@/src/store/user";
+import type { UserState } from "@/src/store/user";
 import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export default function Page() {
@@ -16,6 +19,9 @@ export default function Page() {
     ],
     []
   );
+  const xp = useUserStore((s: UserState) => s.xp);
+  const level = useUserStore((s: UserState) => s.level);
+  const streak = useUserStore((s: UserState) => s.currentStreak);
 
   return (
     <main className="space-y-6">
@@ -24,7 +30,9 @@ export default function Page() {
           <h2 className="text-lg font-semibold">ダッシュボード</h2>
           <p className="text-sm text-neutral-400">学習の進捗を確認しましょう</p>
         </div>
-        <Button className="animate-pop">今日の目標を開始</Button>
+        <Link href="/practice/random">
+          <Button className="animate-pop">今日の目標を開始</Button>
+        </Link>
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -44,9 +52,9 @@ export default function Page() {
         <div className="rounded-lg border border-neutral-800 p-4">
           <h3 className="mb-2 text-sm text-neutral-300">ステータス</h3>
           <ul className="text-sm text-neutral-300 space-y-1">
-            <li>レベル: 1</li>
-            <li>XP: 120</li>
-            <li>学習ストリーク: 3日</li>
+            <li>レベル: {level}</li>
+            <li>XP: {xp}</li>
+            <li>学習ストリーク: {streak}日</li>
           </ul>
         </div>
       </section>
