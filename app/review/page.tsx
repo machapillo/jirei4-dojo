@@ -4,6 +4,7 @@ import { useUserStore } from "@/src/store/user";
 import { listAnswers, type SavedAnswer } from "@/src/lib/answers";
 import { mockQuestions } from "@/src/mock/questions";
 import type { UserState } from "@/src/store/user";
+import Link from "next/link";
 
 export default function ReviewPage() {
   const uid = useUserStore((s: UserState) => s.uid);
@@ -123,6 +124,14 @@ export default function ReviewPage() {
                     <span className="text-neutral-400">正解:</span> {q.solution}
                   </div>
                 )}
+                <div className="mt-3">
+                  <Link
+                    href={{ pathname: "/practice/category", query: { qid: a.questionId } }}
+                    className="inline-block text-sm border border-neutral-800 hover:border-neutral-700 rounded px-3 py-1"
+                  >
+                    この問題を解き直す
+                  </Link>
+                </div>
               </li>
             );
           })}

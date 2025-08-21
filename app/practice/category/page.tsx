@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getQuestions, type Question as ExtQuestion } from "@/src/lib/questionSource";
 import { Notepad } from "@/components/notepad";
@@ -8,6 +9,7 @@ import { useUserStore } from "@/src/store/user";
 import type { UserState } from "@/src/store/user";
 
 export default function PracticeCategoryPage() {
+  const searchParams = useSearchParams();
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
   const [reviewOnly, setReviewOnly] = useState(false);
@@ -43,6 +45,48 @@ export default function PracticeCategoryPage() {
   }, [category, difficulty, reviewOnly, allQuestions, reviewSet]);
 
   const question = pool[idx];
+
+  // Deep-linking from review page: ?qid=<questionId>
+  useEffect(() => {
+    const qid = searchParams.get("qid");
+    if (!qid || !allQuestions.length) return;
+    const target = allQuestions.find((q) => q.id === qid);
+    if (!target) return;
+    // Ensure filters include the target
+    let changed = false;
+    if (category !== target.category) {
+      setCategory(target.category);
+      changed = true;
+    }
+    if (difficulty) {
+      setDifficulty("");
+      changed = true;
+    }
+    if (reviewOnly) {
+      setReviewOnly(false);
+      changed = true;
+    }
+    // If filters just changed, wait for memo recalculation in next tick
+    if (changed) {
+      // clear states for fresh start
+      setAnswer("");
+      setNeedsReview(false);
+      setChecked(false);
+      return;
+    }
+    // Compute current pool and jump to the target index
+    const curPool = allQuestions
+      .filter((q) => q.category === category)
+      .filter((q) => (difficulty ? (q.difficulty || "") === difficulty : true))
+      .filter((q) => (reviewOnly ? reviewSet.has(q.id) : true));
+    const i = curPool.findIndex((q) => q.id === qid);
+    if (i >= 0) {
+      setIdx(i);
+      setAnswer("");
+      setNeedsReview(false);
+      setChecked(false);
+    }
+  }, [searchParams, allQuestions, category, difficulty, reviewOnly, reviewSet]);
 
   const onCheck = async () => {
     if (!question) return;

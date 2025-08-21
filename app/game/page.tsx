@@ -2,6 +2,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useUserStore, type UserState } from "@/src/store/user";
 import { listAnswers, type SavedAnswer } from "@/src/lib/answers";
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Line,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+} from "recharts";
 
 export default function GamePage() {
   const uid = useUserStore((s: UserState) => s.uid);
@@ -32,6 +43,28 @@ export default function GamePage() {
     const curLevelXp = xp % threshold;
     return Math.min(100, Math.round((curLevelXp / threshold) * 100));
   }, [xp]);
+
+  const trend7d = useMemo(() => {
+    // Build last 7 days including today
+    const dayKey = (ms: number) => new Date(new Date(ms).toISOString().slice(0, 10)).getTime();
+    const today = dayKey(Date.now());
+    const days: number[] = Array.from({ length: 7 }, (_, i) => today - (6 - i) * 24 * 60 * 60 * 1000);
+    const bucket = new Map<number, { total: number; correct: number }>();
+    for (const d of days) bucket.set(d, { total: 0, correct: 0 });
+    answers.forEach((a) => {
+      const k = dayKey(a.answeredAt);
+      if (!bucket.has(k)) return;
+      const b = bucket.get(k)!;
+      b.total += 1;
+      if (a.isCorrect) b.correct += 1;
+    });
+    return days.map((d) => {
+      const b = bucket.get(d)!;
+      const rate = b.total ? Math.round((b.correct / b.total) * 100) : 0;
+      const label = new Date(d).toLocaleDateString(undefined, { month: "numeric", day: "numeric" });
+      return { day: label, count: b.total, rate };
+    });
+  }, [answers]);
 
   return (
     <main className="space-y-6">
@@ -90,6 +123,24 @@ export default function GamePage() {
               ))}
             </ul>
           )}
+        </div>
+      </section>
+
+      <section className="border border-neutral-800 rounded p-4">
+        <div className="text-neutral-400 text-sm mb-3">7日間のトレンド（回答数/正答率）</div>
+        <div style={{ width: "100%", height: 260 }}>
+          <ResponsiveContainer>
+            <ComposedChart data={trend7d} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+              <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#2a2a2a" }} />
+              <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#2a2a2a" }} allowDecimals={false} />
+              <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#2a2a2a" }} domain={[0, 100]} />
+              <Tooltip contentStyle={{ background: "#0a0a0a", border: "1px solid #1f2937" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"])} />
+              <Legend wrapperStyle={{ color: "#9ca3af" }} />
+              <Bar yAxisId="left" dataKey="count" name="回答数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#22c55e" strokeWidth={2} dot={{ r: 2 }} />
+            </ComposedChart>
+          </ResponsiveContainer>
         </div>
       </section>
     </main>
