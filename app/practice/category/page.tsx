@@ -1,14 +1,18 @@
 "use client";
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { mockQuestions } from "@/src/mock/questions";
+import { getQuestions, type Question as ExtQuestion } from "@/src/lib/questionSource";
 import { Notepad } from "@/components/notepad";
-import { saveAnswer } from "@/src/lib/answers";
+import { listAnswers, saveAnswer } from "@/src/lib/answers";
 import { useUserStore } from "@/src/store/user";
 import type { UserState } from "@/src/store/user";
 
 export default function PracticeCategoryPage() {
   const [category, setCategory] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>("");
+  const [reviewOnly, setReviewOnly] = useState(false);
+  const [allQuestions, setAllQuestions] = useState<ExtQuestion[]>([]);
+  const [reviewSet, setReviewSet] = useState<Set<string>>(new Set());
   const [idx, setIdx] = useState(0);
   const [answer, setAnswer] = useState("");
   const [checked, setChecked] = useState(false);
@@ -16,19 +20,33 @@ export default function PracticeCategoryPage() {
   const markAnswerResult = useUserStore((s: UserState) => s.markAnswerResult);
   const uid = useUserStore((s: UserState) => s.uid);
 
-  const categories = useMemo(() => {
-    return Array.from(new Set(mockQuestions.map((q) => q.category)));
+  useEffect(() => {
+    getQuestions().then(setAllQuestions);
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const ans = await listAnswers(uid);
+      setReviewSet(new Set(ans.filter((a) => a.needsReview).map((a) => a.questionId)));
+    })();
+  }, [uid]);
+
+  const categories = useMemo(() => {
+    return Array.from(new Set(allQuestions.map((q) => q.category)));
+  }, [allQuestions]);
+
   const pool = useMemo(() => {
-    return category ? mockQuestions.filter((q) => q.category === category) : [];
-  }, [category]);
+    let arr = category ? allQuestions.filter((q) => q.category === category) : [];
+    if (difficulty) arr = arr.filter((q) => (q.difficulty || "") === difficulty);
+    if (reviewOnly) arr = arr.filter((q) => reviewSet.has(q.id));
+    return arr;
+  }, [category, difficulty, reviewOnly, allQuestions, reviewSet]);
 
   const question = pool[idx];
 
   const onCheck = async () => {
     if (!question) return;
-    const isCorrect = normalize(answer) === normalize(question.solution);
+    const isCorrect = checkCorrect(answer, question);
     setChecked(true);
     markAnswerResult(isCorrect);
     try {
@@ -56,7 +74,7 @@ export default function PracticeCategoryPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">分野別演習</h2>
-          <p className="text-sm text-neutral-400">分野を選んで演習しましょう。</p>
+          <p className="text-sm text-neutral-400">分野・難易度・復習モードを選んで演習しましょう。</p>
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -77,6 +95,33 @@ export default function PracticeCategoryPage() {
               </option>
             ))}
           </select>
+          <select
+            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+            value={difficulty}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              setDifficulty(e.target.value);
+              setIdx(0);
+              setAnswer("");
+              setNeedsReview(false);
+              setChecked(false);
+            }}
+          >
+            <option value="">難易度: 全て</option>
+            <option value="easy">易</option>
+            <option value="medium">普</option>
+            <option value="hard">難</option>
+          </select>
+          <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
+            <input
+              type="checkbox"
+              checked={reviewOnly}
+              onChange={(e) => {
+                setReviewOnly(e.target.checked);
+                setIdx(0);
+              }}
+            />
+            復習モード（要復習のみ）
+          </label>
           <Button variant="outline" onClick={onNext} disabled={!pool.length}>
             次の問題
           </Button>
@@ -92,19 +137,32 @@ export default function PracticeCategoryPage() {
           <div className="space-y-4">
             <div className="rounded-lg border border-neutral-800 p-4">
               <div className="text-xs text-neutral-400 mb-2">
-                {question.year}年 第{question.questionNumber}問 / {question.category}（{idx + 1}/{pool.length}）
+                {question.year}年 第{question.questionNumber}問 / {question.category}{question.difficulty ? ` / 難易度:${labelDiff(question.difficulty)}` : ""}（{idx + 1}/{pool.length}）
               </div>
               <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed">{question.content}</p>
             </div>
 
             <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
-              <label className="text-sm text-neutral-300">解答</label>
-              <input
-                className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
-                placeholder="数値のみ等、指示に従って入力"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
+              <label className="text-sm text-neutral-300">解答{question.unit ? `（${question.unit}）` : ""}</label>
+              {question.type === "single" && question.choices?.length ? (
+                <select
+                  className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                >
+                  <option value="">選択してください</option>
+                  {question.choices.map((c, i) => (
+                    <option key={i} value={c}>{c}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+                  placeholder="数値のみ等、指示に従って入力"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                />
+              )}
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-sm text-neutral-300">
                   <input
@@ -120,7 +178,7 @@ export default function PracticeCategoryPage() {
 
             {checked && (
               <div className="rounded-lg border border-neutral-800 p-4">
-                {normalize(answer) === normalize(question.solution) ? (
+                {checkCorrect(answer, question) ? (
                   <p className="text-green-400">正解！ +10XP</p>
                 ) : (
                   <p className="text-red-400">不正解</p>
@@ -146,4 +204,27 @@ export default function PracticeCategoryPage() {
 
 function normalize(v: string) {
   return (v || "").toString().replace(/[\,\s]/g, "").trim();
+}
+
+function checkCorrect(ans: string, q: ExtQuestion) {
+  if (q.type === "single") {
+    return normalize(ans) === normalize(q.solution);
+  }
+  const a = Number(normalize(ans));
+  const s = Number(normalize(q.solution));
+  if (!isNaN(a) && !isNaN(s)) {
+    let ax = a;
+    if (q.rounding === "round") ax = Math.round(ax);
+    if (q.rounding === "ceil") ax = Math.ceil(ax);
+    if (q.rounding === "floor") ax = Math.floor(ax);
+    return Number(ax) === s;
+  }
+  return normalize(ans) === normalize(q.solution);
+}
+
+function labelDiff(d?: string) {
+  if (d === "easy") return "易";
+  if (d === "medium") return "普";
+  if (d === "hard") return "難";
+  return "";
 }
