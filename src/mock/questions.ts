@@ -6,6 +6,12 @@ export type Question = {
   content: string;
   solution: string; // string for simplicity; numeric answers can also be strings
   explanation: string;
+  // Optional fields aligned with lib/questionSource.ts
+  difficulty?: "easy" | "medium" | "hard";
+  type?: "input" | "single";
+  choices?: string[];
+  unit?: string;
+  rounding?: "round" | "ceil" | "floor";
 };
 
 export const mockQuestions: Question[] = [
@@ -20,6 +26,8 @@ export const mockQuestions: Question[] = [
     solution: "500000",
     explanation:
       "損益分岐点売上高 = 固定費 / 貢献利益率。貢献利益率 = (1,000-600)/1,000 = 0.4。よって 200,000/0.4 = 500,000円。",
+    difficulty: "easy",
+    unit: "円",
   },
   {
     id: "q1b",
@@ -31,6 +39,9 @@ export const mockQuestions: Question[] = [
     solution: "25500",
     explanation:
       "NPV = Σ(CF_t/(1+r)^t) - 初期投資。r=10%。概算で 227,272 + 206,611 + 187,828 - 600,000 ≈ 25,711 → 25,500程度。",
+    difficulty: "medium",
+    unit: "円",
+    rounding: "round",
   },
   // 2020
   {
@@ -43,6 +54,8 @@ export const mockQuestions: Question[] = [
     solution: "600", // sqrt(2DS/H) = sqrt(2*1200*3000/20)= sqrt(360000)=600
     explanation:
       "EOQ = √(2DS/H)。D=1,200, S=3,000, H=20 → √(360,000)=600個。",
+    difficulty: "easy",
+    unit: "個",
   },
   {
     id: "q2b",
@@ -77,6 +90,8 @@ export const mockQuestions: Question[] = [
     solution: "650", // 300+200+(2*150)=650
     explanation:
       "製造原価 = 材料費+労務費+製造間接費(150×2h)=650。",
+    difficulty: "easy",
+    unit: "円",
   },
   // 2022
   {
@@ -111,6 +126,9 @@ export const mockQuestions: Question[] = [
     solution: "150",
     explanation:
       "流動比率 = 600/400×100=150%。",
+    difficulty: "easy",
+    unit: "%",
+    rounding: "round",
   },
   // 2018
   {
@@ -134,6 +152,8 @@ export const mockQuestions: Question[] = [
     solution: "650",
     explanation:
       "200+150+(3×100)=650。",
+    difficulty: "easy",
+    unit: "円",
   },
   {
     id: "q5c",
@@ -179,6 +199,8 @@ export const mockQuestions: Question[] = [
     solution: "5",
     explanation:
       "ROA=当期純利益/総資産×100=100/2000×100=5%。",
+    difficulty: "easy",
+    unit: "%",
   },
   // 2023 追加
   {
@@ -213,6 +235,8 @@ export const mockQuestions: Question[] = [
     solution: "8",
     explanation:
       "800/10,000×100=8%。",
+    difficulty: "easy",
+    unit: "%",
   },
   // 練習用追加（年度混在）
   {
@@ -269,6 +293,9 @@ export const mockQuestions: Question[] = [
     solution: "-34329",
     explanation:
       "PV=180,000/1.12+150,000/1.12^2+120,000/1.12^3≈160,714+119,658+85,299=365,671。NPV=365,671-400,000≈-34,329。",
+    difficulty: "medium",
+    unit: "円",
+    rounding: "round",
   },
   {
     id: "q13",
@@ -302,6 +329,275 @@ export const mockQuestions: Question[] = [
     solution: "600",
     explanation:
       "EOQ=√(2×9,000×1,000/50)=√(360,000)=600個。",
+  },
+  {
+    id: "q16",
+    year: 2024,
+    questionNumber: 1,
+    category: "WACC",
+    content:
+      "自己資本コスト8%、負債コスト3%、税率30%。資本構成は自己資本60%、負債40%。WACC（%）を最も近い整数で求めよ。",
+    solution: "6",
+    explanation:
+      "WACC=0.6×8%+0.4×3%×(1-0.3)=4.8%+0.84%=5.64%→約6%。",
+    difficulty: "hard",
+    unit: "%",
+    rounding: "round",
+  },
+  {
+    id: "q17",
+    year: 2024,
+    questionNumber: 2,
+    category: "関連原価",
+    content:
+      "特注受注の可否。追加固定費20,000円、単価2,000円、変動費1,400円、受注数量50個。他製品への影響なし。採算はプラスか（プラスなら1、マイナスなら0）。",
+    solution: "1",
+    explanation:
+      "増分利益=(2,000-1,400)×50 - 20,000 = 30,000 - 20,000 = +10,000でプラス(1)。",
+    difficulty: "medium",
+    type: "single",
+    choices: ["0", "1"],
+  },
+  {
+    id: "q18",
+    year: 2024,
+    questionNumber: 3,
+    category: "線形計画",
+    content:
+      "製品X,Yの利潤は5,4。制約: 2X+Y≤8, X+2Y≤8, X,Y≥0。最大利潤（最も近い整数）。",
+    solution: "24",
+    explanation:
+      "交点X=8/3,Y=8/3で目的=5×8/3+4×8/3=24が最大。",
+    difficulty: "hard",
+  },
+  {
+    id: "q19",
+    year: 2024,
+    questionNumber: 4,
+    category: "待ち行列",
+    content:
+      "M/M/1、到着率λ=4/時、サービス率μ=6/時。系内平均顧客数Lを最も近い整数で。",
+    solution: "2",
+    explanation:
+      "ρ=4/6=0.667、L=ρ/(1-ρ)=0.667/0.333≈2。",
+    difficulty: "hard",
+    rounding: "round",
+  },
+  {
+    id: "q20",
+    year: 2024,
+    questionNumber: 5,
+    category: "PERT/CPM",
+    content:
+      "作業A(1,2,5)、B(2,3,8)が直列。期待工期(β近似)の合計（最も近い整数）。",
+    solution: "6",
+    explanation:
+      "E=(a+4m+b)/6。A=2.33、B=3.67、合計≈6。",
+    difficulty: "hard",
+    unit: "日",
+    rounding: "round",
+  },
+  {
+    id: "q21",
+    year: 2023,
+    questionNumber: 5,
+    category: "WACC",
+    content:
+      "自己資本比率80%、自己資本コスト7%、負債比率20%、負債コスト2%、税率40%。WACC（%）を最も近い整数で。",
+    solution: "6",
+    explanation:
+      "0.8×7% + 0.2×2%×(1-0.4) = 5.6% + 0.24% = 5.84% → 約6。",
+    difficulty: "medium",
+    unit: "%",
+    rounding: "round",
+  },
+  {
+    id: "q22",
+    year: 2022,
+    questionNumber: 5,
+    category: "感度分析",
+    content:
+      "CVP: P=2,500、V=1,800、F=420,000。Pが2%低下時の損益分岐点数量の増加幅（個、最も近い整数）。",
+    solution: "46",
+    explanation:
+      "元Qb=420,000/700=600。P↓で寄与=650、Qb≈646。差≈46。",
+    difficulty: "hard",
+    unit: "個",
+    rounding: "round",
+  },
+  {
+    id: "q23",
+    year: 2021,
+    questionNumber: 5,
+    category: "セールスミックス",
+    content:
+      "A(価格4,000,変動費2,400)×2、B(価格3,000,変動費2,400)×1のセット。固定費1,900,000。複合損益分岐点数量（セット数）。",
+    solution: "500",
+    explanation:
+      "1セット寄与=1,600×2+600=3,800。Q=1,900,000/3,800=500セット。",
+    difficulty: "hard",
+  },
+  {
+    id: "q24",
+    year: 2020,
+    questionNumber: 5,
+    category: "為替",
+    content:
+      "USD/JPYが110→121。円安率（%、最も近い整数）。",
+    solution: "10",
+    explanation:
+      "(121-110)/110×100≈10%。",
+    difficulty: "medium",
+    unit: "%",
+    rounding: "round",
+  },
+  {
+    id: "q25",
+    year: 2019,
+    questionNumber: 5,
+    category: "キャッシュフロー",
+    content:
+      "減価償却200、税引前利益500、法人税100、運転資本増加50。フリーキャッシュフロー(FCF)。",
+    solution: "550",
+    explanation:
+      "(500-100)+200-50=550。",
+    difficulty: "hard",
+  },
+  {
+    id: "q26",
+    year: 2018,
+    questionNumber: 5,
+    category: "回帰分析",
+    content:
+      "単回帰 y=2+3x。x=10時の予測y。",
+    solution: "32",
+    explanation:
+      "2+3×10=32。",
+    difficulty: "easy",
+  },
+  {
+    id: "q27",
+    year: 2024,
+    questionNumber: 6,
+    category: "原価差異",
+    content:
+      "材料標準:10kg×40。実際:12kg×35。数量差異（不利は正）。",
+    solution: "80",
+    explanation:
+      "(12-10)×40=80。不利80。",
+    difficulty: "medium",
+  },
+  {
+    id: "q28",
+    year: 2024,
+    questionNumber: 7,
+    category: "NPV",
+    content:
+      "初期投資900,000、CF:各年250,000(5年)、r=9%。NPV（最も近い整数）。",
+    solution: "72250",
+    explanation:
+      "年金現価係数(9%,5)≈3.889。PV=250,000×3.889=972,250。NPV=72,250。",
+    difficulty: "hard",
+    unit: "円",
+    rounding: "round",
+  },
+  {
+    id: "q29",
+    year: 2023,
+    questionNumber: 6,
+    category: "単位換算",
+    content:
+      "在庫回転日数=365/回転率。回転率7回/年のとき回転日数（最も近い整数）。",
+    solution: "52",
+    explanation:
+      "365/7≈52.14→52。",
+    difficulty: "easy",
+    unit: "日",
+    rounding: "round",
+  },
+  {
+    id: "q30",
+    year: 2022,
+    questionNumber: 6,
+    category: "CVP",
+    content:
+      "目標利益200,000、価格3,500、変動費2,600、固定費1,000,000。必要売上高（円）。",
+    solution: "4666667",
+    explanation:
+      "寄与率=900/3500≈0.2571。必要売上=(1,200,000)/0.2571≈4,666,667円。",
+    difficulty: "medium",
+    unit: "円",
+    rounding: "round",
+  },
+  {
+    id: "q31",
+    year: 2021,
+    questionNumber: 6,
+    category: "デリバティブ",
+    content:
+      "コールのデルタ0.6、基礎資産が10円上昇。オプション理論価格の変化（円）。",
+    solution: "6",
+    explanation:
+      "0.6×10=6。",
+    difficulty: "hard",
+    unit: "円",
+    rounding: "round",
+  },
+  {
+    id: "q32",
+    year: 2020,
+    questionNumber: 6,
+    category: "原価計算",
+    content:
+      "仕損率5%、投入1,000個、材料単価100。正常仕損で材料の良品単位当り負担増（円）。",
+    solution: "5",
+    explanation:
+      "良品=950、単価増=100×(1/0.95-1)≈5。",
+    difficulty: "hard",
+    unit: "円",
+    rounding: "round",
+  },
+  {
+    id: "q33",
+    year: 2019,
+    questionNumber: 6,
+    category: "財務比率",
+    content:
+      "当座比率=(当座資産)/流動負債。現金200、売掛300、棚卸400、流動負債600。(%）。",
+    solution: "83",
+    explanation:
+      "(200+300)/600=0.833→83%。",
+    difficulty: "medium",
+    unit: "%",
+    rounding: "round",
+  },
+  {
+    id: "q34",
+    year: 2018,
+    questionNumber: 6,
+    category: "NPV",
+    content:
+      "初期投資700,000、CF: 400,000, 200,000, 150,000、r=10%。NPV（最も近い整数）。",
+    solution: "-58378",
+    explanation:
+      "PV≈363,636+165,289+112,697=641,622。NPV=641,622-700,000=-58,378。",
+    difficulty: "hard",
+    unit: "円",
+    rounding: "round",
+  },
+  {
+    id: "q35",
+    year: 2024,
+    questionNumber: 8,
+    category: "意思決定",
+    content:
+      "自製変動費1,900円/個、外注2,000円/個。回避可能固定費300,000、数量1,000。外注のほうが得か（得なら1、損なら0）。",
+    solution: "1",
+    explanation:
+      "外注コスト2,000,000-回避固定300,000=1,700,000、自製1,900,000→外注が有利(1)。",
+    difficulty: "medium",
+    type: "single",
+    choices: ["0", "1"],
   },
 ];
 
