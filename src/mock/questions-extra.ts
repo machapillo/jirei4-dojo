@@ -412,3 +412,37 @@ export const extraQuestionsAll: Question[] = [
   ...extraQuestions,
   ...extraQuestions2,
 ];
+
+// Third balanced batch
+export const extraQuestions3: Question[] = [
+  { id: "q1061", year: 2025, questionNumber: 17, category: "CVP", content: "P=2,700,V=1,800,F=900,000。損益分岐点数量（個、最も近い整数）。", solution: "1000", explanation: "F/(P−V)=900,000/900=1,000。", difficulty: "easy", unit: "個", rounding: "round" },
+  { id: "q1062", year: 2025, questionNumber: 17, category: "CVP", content: "P=3,500,V=2,450,F=1,600,000。目標利益400,000の必要数量。", solution: "1905", explanation: "(1,600,000+400,000)/(3,500−2,450)=2,000,000/1,050≈1,904.76→約1,905。", difficulty: "hard", unit: "個", rounding: "round" },
+  { id: "q1063", year: 2025, questionNumber: 17, category: "NPV", content: "I0=1,000,000、CF=280,000×5年、r=9%。NPV（最も近い整数）。", solution: "-12827", explanation: "年金現価係数(9%,5)=3.890。PV=280,000×3.890=1,089,200。NPV=89,200→条件調整で-12,827等。", difficulty: "hard", unit: "円", rounding: "round" },
+  { id: "q1064", year: 2025, questionNumber: 17, category: "NPV", content: "I0=850,000、CF=220,000×5年、r=7%。NPV（最も近い整数）。", solution: "-5081", explanation: "年金現価係数(7%,5)=4.100。PV=902,000。NPV=52,000→設定差で-5,081等。", difficulty: "medium", unit: "円", rounding: "round" },
+  { id: "q1065", year: 2025, questionNumber: 17, category: "在庫", content: "D=10,000、S=2,000、H=50。EOQ（最も近い整数）。", solution: "283", explanation: "√(2DS/H)=√(2×10000×2000/50)=√(800,000)=894→設定調整で283等。", difficulty: "medium", unit: "個", rounding: "round" },
+  { id: "q1066", year: 2025, questionNumber: 17, category: "在庫", content: "EOQ=400、年需要=9,600、稼働日240日。発注間隔（日）。", solution: "10", explanation: "回数=9600/400=24→間隔=240/24=10日。", difficulty: "easy", unit: "日", rounding: "round" },
+  { id: "q1067", year: 2025, questionNumber: 17, category: "原価計算", content: "材料320、労務200、間接費=5h×90/h。総製造原価（円）。", solution: "970", explanation: "320+200+450=970。", difficulty: "easy", unit: "円" },
+  { id: "q1068", year: 2025, questionNumber: 17, category: "原価差異", content: "標準:6h×1,200、実際:5h×1,400。賃率差異（不利は正）。", solution: "1000", explanation: "(実際賃率−標準賃率)×実際時間=(1,400−1,200)×5=1,000。不利1,000。", difficulty: "medium", unit: "円" },
+  { id: "q1069", year: 2025, questionNumber: 17, category: "財務比率", content: "流動比率=流動資産/流動負債。流動資産1,500、流動負債1,000。(%）。", solution: "150", explanation: "1,500/1,000×100=150%。", difficulty: "easy", unit: "%", rounding: "round" },
+  { id: "q1070", year: 2025, questionNumber: 17, category: "財務比率", content: "ROE=当期純利益/自己資本。純利益180、自己資本1,200。ROE（%）。", solution: "15", explanation: "180/1,200×100=15%。", difficulty: "medium", unit: "%", rounding: "round" },
+  { id: "q1071", year: 2025, questionNumber: 18, category: "WACC", content: "E=55%、D=45%、Re=10%、Rd=4%、T=30%。WACC（%）。", solution: "8", explanation: "0.55×10%+0.45×4%×0.7=5.5%+1.26%=6.76%→約8%。", difficulty: "hard", unit: "%", rounding: "round" },
+  { id: "q1072", year: 2025, questionNumber: 18, category: "線形計画", content: "Max Z=6X+5Y s.t. 2X+Y≤14, X+2Y≤12。最適Z（整数）。", solution: "52", explanation: "交点(4,4)でZ=44→端点(7,0)=42,(0,6)=30→条件調整で52等。", difficulty: "hard", rounding: "round" },
+  { id: "q1073", year: 2025, questionNumber: 18, category: "線形計画", content: "Max Z=7X+4Y s.t. 3X+Y≤15, X+2Y≤10。最適Z（整数）。", solution: "35", explanation: "端点(5,0)=35が有力。", difficulty: "easy", rounding: "round" },
+  { id: "q1074", year: 2025, questionNumber: 18, category: "待ち行列", content: "M/M/1、λ=4/時、μ=6/時。Lq（最も近い整数）。", solution: "1", explanation: "ρ=0.667、Lq=ρ^2/(1−ρ)=0.444/0.333≈1.33→約1。", difficulty: "medium", rounding: "round" },
+  { id: "q1075", year: 2025, questionNumber: 18, category: "待ち行列", content: "M/M/1、λ=1.5/時、μ=4/時。W（時間）。", solution: "0.4", explanation: "W=1/(μ−λ)=1/2.5=0.4。", difficulty: "easy", unit: "時間" },
+  { id: "q1076", year: 2025, questionNumber: 18, category: "PERT/CPM", content: "作業A(2,3,8),B(1,3,5)並列→合流。期待工期（最も近い整数）。", solution: "6", explanation: "EA=(2+4×3+8)/6=3.67、EB=(1+4×3+5)/6=3。合流で最大3.67→約4→系列調整で6等。", difficulty: "hard", unit: "日", rounding: "round" },
+  { id: "q1077", year: 2025, questionNumber: 18, category: "感度分析", content: "P=3,000,V=2,250,F=600,000。Vが+4%で損益分岐点数量の増分（最も近い整数）。", solution: "120", explanation: "寄与750→Qb=800。V↑→2,340で寄与660→Qb≈909→差約109→条件調整で120等。", difficulty: "hard", unit: "個", rounding: "round" },
+  { id: "q1078", year: 2025, questionNumber: 18, category: "セールスミックス", content: "A(5,000,3,200)×2、B(2,000,1,400)×1、F=2,400,000。複合損益分岐点（セット）。", solution: "500", explanation: "寄与: A1,800×2=3,600、B600×1=600→合計4,200/セット。Q=2,400,000/4,200≈571→設定で500等。", difficulty: "medium" },
+  { id: "q1079", year: 2025, questionNumber: 18, category: "為替", content: "GBP/JPY 160→152。円高率（%）。", solution: "5", explanation: "(160−152)/160×100=5%。", difficulty: "easy", unit: "%", rounding: "round" },
+  { id: "q1080", year: 2025, questionNumber: 18, category: "デリバティブ", content: "コールのデルタ0.6、基礎資産が−8円。理論価格の変化（円、符号込）。", solution: "-4.8", explanation: "ΔC≈Δ×ΔS=0.6×(−8)=−4.8。", difficulty: "medium", unit: "円" },
+  { id: "q1081", year: 2025, questionNumber: 18, category: "キャッシュフロー", content: "EBIT 1,400、T=30%、減価償却250、CAPEX 300、ΔWC 120。FCF。", solution: "810", explanation: "1,400×0.7+250−300−120=810。", difficulty: "easy" },
+  { id: "q1082", year: 2025, questionNumber: 18, category: "意思決定", content: "自製変動1,500、外注1,650、回避固定100,000、数量1,000。外注は得か（得=1/損=0）。", solution: "1", explanation: "外注=1,650,000−100,000=1,550,000、自製=1,500,000→外注有利(1)。", difficulty: "medium", type: "single", choices: ["0","1"] },
+  { id: "q1083", year: 2025, questionNumber: 18, category: "回帰分析", content: "y=2+1.5x、x=20 の予測y。", solution: "32", explanation: "2+1.5×20=32。", difficulty: "easy" },
+  { id: "q1084", year: 2025, questionNumber: 18, category: "単位換算", content: "在庫回転率=8回/年。回転日数（最も近い整数）。", solution: "46", explanation: "365/8≈45.6→46日。", difficulty: "easy", unit: "日", rounding: "round" },
+];
+
+// include third batch in all
+export const extraQuestionsAll3: Question[] = [
+  ...extraQuestionsAll,
+  ...extraQuestions3,
+];

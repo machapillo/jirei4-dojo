@@ -27,7 +27,12 @@ async function loadExtra(): Promise<Question[]> {
   try {
     const mod = await import("@/src/mock/questions-extra");
     const anyMod = mod as any;
-    return (anyMod.extraQuestionsAll || anyMod.extraQuestions || []) as Question[];
+    return (
+      anyMod.extraQuestionsAll3 ||
+      anyMod.extraQuestionsAll ||
+      anyMod.extraQuestions ||
+      []
+    ) as Question[];
   } catch {
     return [];
   }
