@@ -599,5 +599,83 @@ export const mockQuestions: Question[] = [
     type: "single",
     choices: ["0", "1"],
   },
+  {
+    id: "q36",
+    year: 2024,
+    questionNumber: 9,
+    category: "待ち行列",
+    content:
+      "M/M/1、λ=9/時、μ=10/時。平均待ち時間Wq（時間, 小数表示可）。",
+    solution: "0.9",
+    explanation:
+      "Wq=λ/(μ(μ-λ))=9/(10×1)=0.9時間。",
+    difficulty: "hard",
+    unit: "時間",
+  },
+  {
+    id: "q37",
+    year: 2023,
+    questionNumber: 9,
+    category: "線形計画",
+    content:
+      "Max Z=6X+5Y, s.t. 3X+Y≤12, X+2Y≤10, X,Y≥0。最適Z（最も近い整数）。",
+    solution: "35",
+    explanation:
+      "交点は 3X+Y=12 と X+2Y=10 → Y=3.6, X=2.8。Z=6×2.8+5×3.6=34.8 ⇒ 最も近い整数で35。",
+    difficulty: "hard",
+    rounding: "round",
+  },
+  {
+    id: "q38",
+    year: 2022,
+    questionNumber: 9,
+    category: "WACC",
+    content:
+      "E/D=1、Re=9%、Rd=4%、税率30%。WACC（%）。",
+    solution: "6",
+    explanation:
+      "E=50%,D=50%。WACC=0.5×9%+0.5×4%×(1-0.3)=4.5%+1.4%=5.9%≈6%。",
+    difficulty: "hard",
+    unit: "%",
+    rounding: "round",
+  },
+  {
+    id: "q39",
+    year: 2021,
+    questionNumber: 9,
+    category: "デリバティブ",
+    content:
+      "ブラック–ショールズ近似でガンマが0.02、原資産±5円変動時のデルタ変化の概算（絶対値）。",
+    solution: "0.1",
+    explanation:
+      "Δの変化 ≈ Γ×ΔS = 0.02×5 = 0.1。",
+    difficulty: "hard",
+  },
+  {
+    id: "q40",
+    year: 2020,
+    questionNumber: 9,
+    category: "キャッシュフロー",
+    content:
+      "EBIT 800、税率30%、減価償却200、CAPEX 300、運転資本増加100。FCF。",
+    solution: "360",
+    explanation:
+      "FCF = EBIT(1-T)+減価償却−CAPEX−ΔWC = 800×0.7+200−300−100=360。",
+    difficulty: "hard",
+  },
+  {
+    id: "q41",
+    year: 2019,
+    questionNumber: 9,
+    category: "感度分析",
+    content:
+      "P=3,000、V=2,200、F=640,000。Vが+5%上昇時の損益分岐点数量の増加幅（個、最も近い整数）。",
+    solution: "128",
+    explanation:
+      "元寄与=800→Qb=640,000/800=800。V↑5%でV=2,310→寄与=690→Qb=640,000/690≈927.54。差≈127.54→128。",
+    difficulty: "hard",
+    unit: "個",
+    rounding: "round",
+  },
 ];
 

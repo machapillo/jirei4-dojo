@@ -179,6 +179,38 @@ function PracticeCategoryContent() {
             </Button>
           </>
         )}
+        below={(
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-neutral-500 mr-1">難易度クイック</span>
+            {[
+              { key: "", label: "全て" },
+              { key: "easy", label: "易" },
+              { key: "medium", label: "普" },
+              { key: "hard", label: "難" },
+            ].map((d) => (
+              <button
+                key={d.key || "all"}
+                type="button"
+                onClick={() => {
+                  setDifficulty(d.key);
+                  setIdx(0);
+                  setAnswer("");
+                  setNeedsReview(false);
+                  setChecked(false);
+                }}
+                className={
+                  "text-xs px-3 py-1 rounded-full border transition-colors " +
+                  (difficulty === d.key
+                    ? "border-emerald-600 bg-emerald-900/30 text-emerald-200"
+                    : "border-neutral-800 bg-neutral-950 text-neutral-300 hover:bg-neutral-900")
+                }
+                aria-label={`難易度${d.label}`}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
+        )}
       />
 
       {!category ? (

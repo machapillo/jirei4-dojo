@@ -40,14 +40,14 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
         <div className={`rounded-lg border p-4 transition-colors ${checked ? (isCorrect ? "border-emerald-700 bg-emerald-950/20" : "border-red-700 bg-red-950/10") : "border-neutral-800"}`}>
-          <div className="text-xs text-neutral-400 mb-2 flex items-center justify-between">
+          <div className="text-xs sm:text-[13px] text-neutral-400 mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <span>
               {question.year}年 第{question.questionNumber}問 / {question.category}
               {question.difficulty ? ` / 難易度:${labelDiff(question.difficulty)}` : ""}
             </span>
             {metaRight ? <span className="text-neutral-500">{metaRight}</span> : null}
           </div>
-          <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed">{question.content}</p>
+          <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed text-[15px] sm:text-base">{question.content}</p>
         </div>
 
         <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
@@ -75,7 +75,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               disabled={isTimeUp}
             />
           )}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <label className="flex items-center gap-2 text-sm text-neutral-300">
               <input
                 type="checkbox"
@@ -85,7 +85,9 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               />
               要復習に追加
             </label>
-            <Button onClick={onCheck} disabled={isTimeUp}>採点する</Button>
+            <div className="flex gap-2">
+              <Button onClick={onCheck} disabled={isTimeUp}>採点する</Button>
+            </div>
           </div>
         </div>
 
@@ -105,7 +107,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
         {checked && (
           <div className="rounded-lg border border-neutral-800 p-4">
             <h3 className="font-medium mb-2">解説</h3>
-            <p className="text-sm text-neutral-300 whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
+            <p className="text-sm sm:text-[15px] text-neutral-300 whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
           </div>
         )}
       </div>
