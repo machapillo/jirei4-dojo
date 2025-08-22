@@ -130,7 +130,7 @@ function PracticeCategoryContent() {
         right={(
           <>
             <select
-              className="bg-neutral-900 border border-neutral-700 rounded-full px-4 py-3 text-base"
+              className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
               value={category}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setCategory(e.target.value);
@@ -148,7 +148,7 @@ function PracticeCategoryContent() {
               ))}
             </select>
             <select
-              className="bg-neutral-900 border border-neutral-700 rounded-full px-4 py-3 text-base"
+              className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
               value={difficulty}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setDifficulty(e.target.value);
@@ -163,7 +163,7 @@ function PracticeCategoryContent() {
               <option value="medium">普</option>
               <option value="hard">難</option>
             </select>
-            <label className="flex items-center gap-2 text-base text-neutral-300 px-2">
+            <label className="flex items-center gap-2 text-base text-neutral-700 px-2">
               <input
                 type="checkbox"
                 checked={reviewOnly}
@@ -181,7 +181,7 @@ function PracticeCategoryContent() {
         )}
         below={(
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm text-neutral-400 mr-1">難易度クイック</span>
+            <span className="text-sm text-neutral-600 mr-1">難易度クイック</span>
             {[
               { key: "", label: "全て" },
               { key: "easy", label: "易" },
@@ -202,13 +202,13 @@ function PracticeCategoryContent() {
                   "text-base px-4 py-2 rounded-full border font-semibold transition-colors " +
                   (difficulty === d.key
                     ? (d.key === "easy"
-                        ? "border-emerald-600 bg-emerald-900/30 text-emerald-200"
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
                         : d.key === "medium"
-                        ? "border-sky-600 bg-sky-900/30 text-sky-200"
+                        ? "border-sky-500 bg-sky-50 text-sky-700"
                         : d.key === "hard"
-                        ? "border-rose-600 bg-rose-900/30 text-rose-200"
-                        : "border-neutral-700 bg-neutral-800 text-neutral-100")
-                    : "border-neutral-700 bg-neutral-900 text-neutral-300 hover:bg-neutral-800")
+                        ? "border-rose-500 bg-rose-50 text-rose-700"
+                        : "border-neutral-300 bg-neutral-100 text-neutral-800")
+                    : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50")
                 }
                 aria-label={`難易度${d.label}`}
               >
@@ -220,9 +220,9 @@ function PracticeCategoryContent() {
       />
 
       {!category ? (
-        <p className="text-neutral-400 text-sm">上のセレクトから分野を選択してください。</p>
+        <p className="text-neutral-600 text-sm">上のセレクトから分野を選択してください。</p>
       ) : !question ? (
-        <p className="text-neutral-400 text-sm">この分野の問題が見つかりません。</p>
+        <p className="text-neutral-600 text-sm">この分野の問題が見つかりません。</p>
       ) : (
         <PracticeQA
           question={question}
