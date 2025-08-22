@@ -19,6 +19,7 @@ export default function GamePage() {
   const xp = useUserStore((s: UserState) => s.xp);
   const level = useUserStore((s: UserState) => s.level);
   const currentStreak = useUserStore((s: UserState) => s.currentStreak);
+  const achievements = useUserStore((s: UserState) => s.achievements);
 
   const [answers, setAnswers] = useState<SavedAnswer[]>([]);
 
@@ -143,6 +144,29 @@ export default function GamePage() {
           </ResponsiveContainer>
         </div>
       </section>
+
+      <section className="border border-neutral-800 rounded p-4">
+        <div className="text-neutral-400 text-sm mb-3">実績</div>
+        {achievements.length === 0 ? (
+          <div className="text-neutral-500 text-sm">まだ実績はありません。</div>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {achievements.map((a) => (
+              <span key={a} className="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-200">
+                {renderBadgeLabel(a)}
+              </span>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
+}
+
+function renderBadgeLabel(id: string) {
+  if (id === "streak_3") return "3日連続達成";
+  if (id === "streak_7") return "7日連続達成";
+  if (id === "xp_100") return "累計100XP";
+  if (id === "xp_500") return "累計500XP";
+  return id;
 }

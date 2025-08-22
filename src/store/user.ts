@@ -51,12 +51,21 @@ export const useUserStore = create<UserState>((set) => ({
       const nextXp = s.xp + xpGain;
       const levelUpThreshold = 100;
       const gainedLevels = Math.floor(nextXp / levelUpThreshold) - Math.floor(s.xp / levelUpThreshold);
+      const newStreak = alreadyCountedToday ? s.currentStreak : s.currentStreak + 1;
+      // Achievement rules (simple): streak3, streak7, xp100, xp500
+      const addIfMissing = (arr: string[], id: string) => (arr.includes(id) ? arr : [...arr, id]);
+      let achievements = s.achievements;
+      if (newStreak >= 3) achievements = addIfMissing(achievements, "streak_3");
+      if (newStreak >= 7) achievements = addIfMissing(achievements, "streak_7");
+      if (nextXp >= 100) achievements = addIfMissing(achievements, "xp_100");
+      if (nextXp >= 500) achievements = addIfMissing(achievements, "xp_500");
       return {
         ...s,
         xp: nextXp,
         level: s.level + Math.max(0, gainedLevels),
-        currentStreak: alreadyCountedToday ? s.currentStreak : s.currentStreak + 1,
+        currentStreak: newStreak,
         lastAnsweredDate: today,
+        achievements,
       };
     }),
   reset: () => ({ uid: undefined, email: undefined, xp: 0, level: 1, currentStreak: 0, lastAnsweredDate: undefined, achievements: [] }),

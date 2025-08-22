@@ -1,6 +1,6 @@
 "use client";
-import { useMemo, useState } from "react";
-import { mockQuestions } from "@/src/mock/questions";
+import { useEffect, useMemo, useState } from "react";
+import { getQuestions, type Question as ExtQuestion } from "@/src/lib/questionSource";
 import { Button } from "@/components/ui/button";
 import { Notepad } from "@/components/notepad";
 import { useUserStore } from "@/src/store/user";
@@ -12,17 +12,23 @@ export default function RandomPracticePage() {
   const [answer, setAnswer] = useState("");
   const [checked, setChecked] = useState(false);
   const [needsReview, setNeedsReview] = useState(false);
+  const [all, setAll] = useState<ExtQuestion[]>([]);
   const markAnswerResult = useUserStore((s: UserState) => s.markAnswerResult);
   const uid = useUserStore((s: UserState) => s.uid);
 
+  useEffect(() => {
+    getQuestions().then(setAll);
+  }, []);
+
   const question = useMemo(() => {
-    const idx = Math.floor(((seed || Date.now()) % 997) % mockQuestions.length);
-    return mockQuestions[idx];
-  }, [seed]);
+    if (!all.length) return undefined;
+    const idx = Math.floor(((seed || Date.now()) % 997) % all.length);
+    return all[idx];
+  }, [seed, all]);
 
   const onCheck = async () => {
     if (!question) return;
-    const isCorrect = normalize(answer) === normalize(question.solution);
+    const isCorrect = checkCorrect(answer, question);
     setChecked(true);
     markAnswerResult(isCorrect);
     try {
@@ -54,21 +60,37 @@ export default function RandomPracticePage() {
         <Button variant="outline" onClick={onNext}>別の問題</Button>
       </div>
 
+      {!question ? (
+        <p className="text-neutral-400 text-sm">問題を読み込み中...</p>
+      ) : (
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-4">
           <div className="rounded-lg border border-neutral-800 p-4">
-            <div className="text-xs text-neutral-400 mb-2">{question.year}年 第{question.questionNumber}問 / {question.category}</div>
+            <div className="text-xs text-neutral-400 mb-2">{question.year}年 第{question.questionNumber}問 / {question.category}{question.difficulty ? ` / 難易度:${labelDiff(question.difficulty)}` : ""}</div>
             <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed">{question.content}</p>
           </div>
 
           <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
-            <label className="text-sm text-neutral-300">解答</label>
-            <input
-              className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
-              placeholder="数値のみ等、指示に従って入力"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-            />
+            <label className="text-sm text-neutral-300">解答{question.unit ? `（${question.unit}）` : ""}</label>
+            {question.type === "single" && question.choices?.length ? (
+              <select
+                className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              >
+                <option value="">選択してください</option>
+                {question.choices.map((c, i) => (
+                  <option key={i} value={c}>{c}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+                placeholder="数値のみ等、指示に従って入力"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+            )}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-neutral-300">
                 <input
@@ -84,7 +106,7 @@ export default function RandomPracticePage() {
 
           {checked && (
             <div className="rounded-lg border border-neutral-800 p-4">
-              {normalize(answer) === normalize(question.solution) ? (
+              {checkCorrect(answer, question) ? (
                 <p className="text-green-400">正解！ +10XP</p>
               ) : (
                 <p className="text-red-400">不正解</p>
@@ -103,10 +125,34 @@ export default function RandomPracticePage() {
           )}
         </div>
       </div>
+      )}
     </main>
   );
 }
 
 function normalize(v: string) {
-  return (v || "").toString().replace(/[,\s]/g, "").trim();
+  return (v || "").toString().replace(/[\,\s]/g, "").trim();
+}
+
+function checkCorrect(ans: string, q: ExtQuestion) {
+  if (q.type === "single") {
+    return normalize(ans) === normalize(q.solution);
+  }
+  const a = Number(normalize(ans));
+  const s = Number(normalize(q.solution));
+  if (!isNaN(a) && !isNaN(s)) {
+    let ax = a;
+    if (q.rounding === "round") ax = Math.round(ax);
+    if (q.rounding === "ceil") ax = Math.ceil(ax);
+    if (q.rounding === "floor") ax = Math.floor(ax);
+    return Number(ax) === s;
+  }
+  return normalize(ans) === normalize(q.solution);
+}
+
+function labelDiff(d?: string) {
+  if (d === "easy") return "易";
+  if (d === "medium") return "普";
+  if (d === "hard") return "難";
+  return "";
 }

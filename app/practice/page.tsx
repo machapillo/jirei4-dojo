@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import type { Route } from "next";
 import { Button } from "@/components/ui/button";
 
 export default function PracticePage() {
@@ -26,6 +27,13 @@ export default function PracticePage() {
           <p className="text-sm text-neutral-400 mb-3">全範囲からショートクイズ。</p>
           <Link href="/practice/random">
             <Button variant="outline">開始</Button>
+          </Link>
+        </div>
+        <div className="rounded-lg border border-neutral-800 p-4">
+          <h3 className="font-medium mb-2">問題管理</h3>
+          <p className="text-sm text-neutral-400 mb-3">カスタム問題のインポート/エクスポート。</p>
+          <Link href={("/practice/manage" as Route)}>
+            <Button variant="outline">開く</Button>
           </Link>
         </div>
       </div>
