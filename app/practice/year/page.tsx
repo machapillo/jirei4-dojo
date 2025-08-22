@@ -100,14 +100,14 @@ export default function PracticeYearPage() {
   };
 
   return (
-    <main className="space-y-6">
+    <main className="container space-y-6 py-6">
       <PracticeHeader
         title="年度別演習"
         subtitle="年度・難易度・復習モードを選んで、本試験形式で解きましょう。"
         right={(
           <>
             <select
-              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              className="bg-white border border-neutral-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
               value={year}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setYear(e.target.value);
@@ -123,7 +123,7 @@ export default function PracticeYearPage() {
               ))}
             </select>
             <select
-              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              className="bg-white border border-neutral-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
               value={difficulty}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setDifficulty(e.target.value);
@@ -138,7 +138,7 @@ export default function PracticeYearPage() {
               <option value="medium">普</option>
               <option value="hard">難</option>
             </select>
-            <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
+            <label className="flex items-center gap-2 text-sm text-neutral-700 px-2">
               <input
                 type="checkbox"
                 checked={reviewOnly}
@@ -158,17 +158,17 @@ export default function PracticeYearPage() {
           </>
         )}
         below={year ? (
-          <div className="rounded-lg border border-neutral-800 p-3 text-sm text-neutral-300 flex items-center gap-3">
-            <span className={isTimeUp ? "text-red-400" : "text-neutral-300"}>残り時間: {formatMMSS(remainingSec)}</span>
-            {isTimeUp && <span className="text-red-400">時間切れです</span>}
+          <div className="rounded-xl border border-neutral-200 bg-white p-3 shadow-sm text-sm text-neutral-700 flex items-center gap-3">
+            <span className={isTimeUp ? "text-red-600" : "text-neutral-700"}>残り時間: {formatMMSS(remainingSec)}</span>
+            {isTimeUp && <span className="text-red-600">時間切れです</span>}
           </div>
         ) : null}
       />
 
       {!year ? (
-        <p className="text-neutral-400 text-sm">上のセレクトから年度を選択してください。</p>
+        <p className="text-neutral-600 text-sm">上のセレクトから年度を選択してください。</p>
       ) : !question ? (
-        <p className="text-neutral-400 text-sm">この年度の問題が見つかりません。</p>
+        <p className="text-neutral-600 text-sm">この年度の問題が見つかりません。</p>
       ) : (
         <PracticeQA
           question={question}

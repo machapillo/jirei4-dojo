@@ -68,20 +68,20 @@ export default function GamePage() {
   }, [answers]);
 
   return (
-    <main className="space-y-6">
+    <main className="container space-y-6 py-6">
       <div>
         <h2 className="text-lg font-semibold">ゲーム</h2>
-        <p className="text-sm text-neutral-400">XP・レベル・ストリークや成績を確認できます。</p>
+        <p className="text-sm text-neutral-600">XP・レベル・ストリークや成績を確認できます。</p>
       </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="border border-neutral-800 rounded p-4">
-          <div className="text-neutral-400 text-sm">レベル</div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div className="text-neutral-700 text-sm">レベル</div>
           <div className="text-3xl font-bold">{level}</div>
           <div className="mt-3">
-            <div className="h-2 bg-neutral-800 rounded">
+            <div className="h-2 bg-neutral-200 rounded">
               <div
-                className="h-2 bg-blue-500 rounded"
+                className="h-2 bg-brand.blue rounded"
                 style={{ width: `${levelProgress}%` }}
               />
             </div>
@@ -89,35 +89,35 @@ export default function GamePage() {
           </div>
         </div>
 
-        <div className="border border-neutral-800 rounded p-4">
-          <div className="text-neutral-400 text-sm">総XP</div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div className="text-neutral-700 text-sm">総XP</div>
           <div className="text-3xl font-bold">{xp}</div>
         </div>
 
-        <div className="border border-neutral-800 rounded p-4">
-          <div className="text-neutral-400 text-sm">現在のストリーク</div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div className="text-neutral-700 text-sm">現在のストリーク</div>
           <div className="text-3xl font-bold">{currentStreak} 日</div>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="border border-neutral-800 rounded p-4">
-          <div className="text-neutral-400 text-sm mb-2">成績</div>
-          <div className="text-neutral-200 text-sm">解答数: {stats.total}</div>
-          <div className="text-neutral-200 text-sm">正解数: {stats.correct}</div>
-          <div className="text-neutral-200 text-sm">正答率: {stats.rate}%</div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div className="text-neutral-700 text-sm mb-2">成績</div>
+          <div className="text-neutral-700 text-sm">解答数: {stats.total}</div>
+          <div className="text-neutral-700 text-sm">正解数: {stats.correct}</div>
+          <div className="text-neutral-700 text-sm">正答率: {stats.rate}%</div>
         </div>
 
-        <div className="md:col-span-2 border border-neutral-800 rounded p-4">
-          <div className="text-neutral-400 text-sm mb-3">直近の解答</div>
+        <div className="md:col-span-2 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <div className="text-neutral-700 text-sm mb-3">直近の解答</div>
           {!recent.length ? (
             <div className="text-neutral-500 text-sm">まだ履歴がありません。</div>
           ) : (
             <ul className="space-y-2 text-sm">
               {recent.map((a, i) => (
                 <li key={i} className="flex items-center justify-between">
-                  <span className="text-neutral-300">{a.questionId}</span>
-                  <span className={a.isCorrect ? "text-green-400" : "text-red-400"}>
+                  <span className="text-neutral-700">{a.questionId}</span>
+                  <span className={a.isCorrect ? "text-emerald-600" : "text-red-600"}>
                     {a.isCorrect ? "正解" : "不正解"}
                   </span>
                 </li>
@@ -127,41 +127,41 @@ export default function GamePage() {
         </div>
       </section>
 
-      <section className="border border-neutral-800 rounded p-4">
-        <div className="text-neutral-400 text-sm mb-3">7日間のトレンド（回答数/正答率）</div>
+      <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="text-neutral-700 text-sm mb-3">7日間のトレンド（回答数/正答率）</div>
         <div style={{ width: "100%", height: 260 }}>
           <ResponsiveContainer>
             <ComposedChart data={trend7d} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
-              <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#2a2a2a" }} />
-              <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#2a2a2a" }} allowDecimals={false} />
-              <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#2a2a2a" }} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: "#0a0a0a", border: "1px solid #1f2937" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"])} />
-              <Legend wrapperStyle={{ color: "#9ca3af" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} />
+              <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} allowDecimals={false} />
+              <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#e5e7eb" }} domain={[0, 100]} />
+              <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", color: "#111827" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"]) } />
+              <Legend wrapperStyle={{ color: "#6b7280" }} />
               <Bar yAxisId="left" dataKey="count" name="回答数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#22c55e" strokeWidth={2} dot={{ r: 2 }} />
+              <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#16a34a" strokeWidth={2} dot={{ r: 2 }} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <section className="border border-neutral-800 rounded p-4">
-        <div className="text-neutral-400 text-sm mb-3">実績</div>
+      <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="text-neutral-700 text-sm mb-3">実績</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {ALL_BADGES.map((b) => {
             const owned = achievements.includes(b.id);
             return (
               <div
                 key={b.id}
-                className={`rounded-md p-3 border ${owned ? "border-emerald-700 bg-emerald-950/30" : "border-neutral-800 bg-neutral-900"}`}
+                className={`rounded-lg p-3 border shadow-sm ${owned ? "border-emerald-200 bg-emerald-50" : "border-neutral-200 bg-white"}`}
               >
                 <div className="flex items-start gap-3">
                   <div className={`text-2xl ${owned ? "opacity-100" : "opacity-40"}`}>{b.icon}</div>
                   <div className="flex-1">
-                    <div className={`text-sm font-medium ${owned ? "text-emerald-300" : "text-neutral-300"}`}>{b.title}</div>
-                    <div className="text-xs text-neutral-400">{b.desc}</div>
+                    <div className={`text-sm font-medium ${owned ? "text-emerald-700" : "text-neutral-700"}`}>{b.title}</div>
+                    <div className="text-xs text-neutral-500">{b.desc}</div>
                   </div>
-                  <div className={`text-[10px] px-2 py-0.5 rounded ${owned ? "bg-emerald-800/40 text-emerald-300 border border-emerald-700" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
+                  <div className={`text-[10px] px-2 py-0.5 rounded border ${owned ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-neutral-50 text-neutral-600 border-neutral-200"}`}>
                     {owned ? "獲得済" : "未獲得"}
                   </div>
                 </div>

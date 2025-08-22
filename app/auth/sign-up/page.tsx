@@ -34,30 +34,30 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="space-y-6 max-w-sm">
+    <main className="container space-y-6 py-6 max-w-sm">
       <h2 className="text-lg font-semibold">新規登録</h2>
       <form onSubmit={onSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="text-sm text-neutral-300">メールアドレス</label>
+          <label className="text-sm text-neutral-700">メールアドレス</label>
           <input
             type="email"
-            className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+            className="w-full rounded-md bg-white border border-neutral-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm text-neutral-300">パスワード</label>
+          <label className="text-sm text-neutral-700">パスワード</label>
           <input
             type="password"
-            className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+            className="w-full rounded-md bg-white border border-neutral-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <Button disabled={loading} type="submit" className="w-full">{loading ? "処理中..." : "登録"}</Button>
       </form>
     </main>

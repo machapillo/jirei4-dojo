@@ -71,11 +71,11 @@ export default function Page() {
   }, [answers]);
 
   return (
-    <main className="space-y-6">
+    <main className="container space-y-6 py-6">
       <section className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">ダッシュボード</h2>
-          <p className="text-sm text-neutral-400">学習の進捗を確認しましょう</p>
+          <p className="text-sm text-neutral-600">学習の進捗を確認しましょう</p>
         </div>
         <Link href="/practice/random">
           <Button className="animate-pop">今日の目標を開始</Button>
@@ -83,22 +83,22 @@ export default function Page() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-neutral-800 p-4">
-          <h3 className="mb-2 text-sm text-neutral-300">週間 正解数</h3>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm text-neutral-700">週間 正解数</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
-                <XAxis dataKey="day" stroke="#666" />
-                <YAxis stroke="#666" />
-                <Tooltip contentStyle={{ background: "#111", border: "1px solid #333" }} />
+                <XAxis dataKey="day" stroke="#9ca3af" />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", color: "#111827" }} />
                 <Line type="monotone" dataKey="correct" stroke="#2E7FE8" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="rounded-lg border border-neutral-800 p-4">
-          <h3 className="mb-2 text-sm text-neutral-300">ステータス</h3>
-          <ul className="text-sm text-neutral-300 space-y-1">
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm text-neutral-700">ステータス</h3>
+          <ul className="text-sm text-neutral-700 space-y-1">
             <li>レベル: {level}</li>
             <li>XP: {xp}</li>
             <li>学習ストリーク: {streak}日</li>
@@ -107,26 +107,26 @@ export default function Page() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-neutral-800 p-4">
-          <h3 className="mb-2 text-sm text-neutral-300">全体正答率</h3>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm text-neutral-700">全体正答率</h3>
           {loadingStats ? (
             <p className="text-neutral-500 text-sm">集計中...</p>
           ) : (
-            <ul className="text-sm text-neutral-300 space-y-1">
+            <ul className="text-sm text-neutral-700 space-y-1">
               <li>解答数: {overall.total}</li>
               <li>正解数: {overall.correct}</li>
               <li>正答率: {overall.rate}%</li>
             </ul>
           )}
         </div>
-        <div className="rounded-lg border border-neutral-800 p-4">
-          <h3 className="mb-2 text-sm text-neutral-300">分野別 正答率（直近）</h3>
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm text-neutral-700">分野別 正答率（直近）</h3>
           {loadingStats ? (
             <p className="text-neutral-500 text-sm">集計中...</p>
           ) : byCategory.length === 0 ? (
             <p className="text-neutral-500 text-sm">まだデータがありません</p>
           ) : (
-            <ul className="text-sm text-neutral-300 space-y-1">
+            <ul className="text-sm text-neutral-700 space-y-1">
               {byCategory.map((r) => (
                 <li key={r.cat} className="flex items-center justify-between">
                   <span>{r.cat}</span>

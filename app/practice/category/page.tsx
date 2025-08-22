@@ -123,7 +123,7 @@ function PracticeCategoryContent() {
   };
 
   return (
-    <main className="space-y-6">
+    <main className="container space-y-6 py-6">
       <PracticeHeader
         title="🎯 分野別演習"
         subtitle="分野・難易度・復習モードを選んで楽しくチャレンジ！"

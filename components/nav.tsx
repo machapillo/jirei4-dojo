@@ -24,17 +24,17 @@ export function Nav() {
           className={clsx(
             "rounded-md px-3 py-2 border transition",
             pathname === t.href
-              ? "border-brand.blue text-white"
-              : "border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700"
+              ? "bg-brand.blue text-white border-brand.blue"
+              : "border-neutral-200 text-neutral-700 hover:bg-neutral-50"
           )}
         >
           {t.label}
         </Link>
       ))}
       <div className="ml-auto flex gap-2">
-        <Link href="/auth/sign-in" className="text-neutral-300 hover:text-white">ログイン</Link>
+        <Link href="/auth/sign-in" className="text-neutral-700 hover:text-neutral-900">ログイン</Link>
         <span className="text-neutral-600">/</span>
-        <Link href="/auth/sign-up" className="text-neutral-300 hover:text-white">新規登録</Link>
+        <Link href="/auth/sign-up" className="text-neutral-700 hover:text-neutral-900">新規登録</Link>
       </div>
     </nav>
   );
