@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { Suspense, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getQuestions, type Question as ExtQuestion } from "@/src/lib/questionSource";
@@ -9,6 +9,14 @@ import { useUserStore } from "@/src/store/user";
 import type { UserState } from "@/src/store/user";
 
 export default function PracticeCategoryPage() {
+  return (
+    <Suspense fallback={<main className="space-y-6"><p className="text-neutral-400 text-sm">読み込み中...</p></main>}>
+      <PracticeCategoryContent />
+    </Suspense>
+  );
+}
+
+function PracticeCategoryContent() {
   const searchParams = useSearchParams();
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
