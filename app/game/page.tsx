@@ -147,26 +147,37 @@ export default function GamePage() {
 
       <section className="border border-neutral-800 rounded p-4">
         <div className="text-neutral-400 text-sm mb-3">実績</div>
-        {achievements.length === 0 ? (
-          <div className="text-neutral-500 text-sm">まだ実績はありません。</div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {achievements.map((a) => (
-              <span key={a} className="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-200">
-                {renderBadgeLabel(a)}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {ALL_BADGES.map((b) => {
+            const owned = achievements.includes(b.id);
+            return (
+              <div
+                key={b.id}
+                className={`rounded-md p-3 border ${owned ? "border-emerald-700 bg-emerald-950/30" : "border-neutral-800 bg-neutral-900"}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`text-2xl ${owned ? "opacity-100" : "opacity-40"}`}>{b.icon}</div>
+                  <div className="flex-1">
+                    <div className={`text-sm font-medium ${owned ? "text-emerald-300" : "text-neutral-300"}`}>{b.title}</div>
+                    <div className="text-xs text-neutral-400">{b.desc}</div>
+                  </div>
+                  <div className={`text-[10px] px-2 py-0.5 rounded ${owned ? "bg-emerald-800/40 text-emerald-300 border border-emerald-700" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
+                    {owned ? "獲得済" : "未獲得"}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </section>
     </main>
   );
 }
 
-function renderBadgeLabel(id: string) {
-  if (id === "streak_3") return "3日連続達成";
-  if (id === "streak_7") return "7日連続達成";
-  if (id === "xp_100") return "累計100XP";
-  if (id === "xp_500") return "累計500XP";
-  return id;
-}
+type Badge = { id: string; title: string; desc: string; icon: string };
+const ALL_BADGES: Badge[] = [
+  { id: "streak_3", title: "3日連続達成", desc: "3日連続で正解を記録しました", icon: "🔥" },
+  { id: "streak_7", title: "7日連続達成", desc: "1週間連続で正解を記録しました", icon: "🏆" },
+  { id: "xp_100", title: "累計100XP", desc: "累計XPが100に到達", icon: "✨" },
+  { id: "xp_500", title: "累計500XP", desc: "継続は力なり。累計XPが500に到達", icon: "💎" },
+];
