@@ -22,10 +22,22 @@ async function loadMock(): Promise<{ mockQuestions: Question[] }> {
   return { mockQuestions: (mod as any).mockQuestions as Question[] };
 }
 
+// Optionally load extra questions if present
+async function loadExtra(): Promise<Question[]> {
+  try {
+    const mod = await import("@/src/mock/questions-extra");
+    const anyMod = mod as any;
+    return (anyMod.extraQuestionsAll || anyMod.extraQuestions || []) as Question[];
+  } catch {
+    return [];
+  }
+}
+
 export async function getQuestions(): Promise<Question[]> {
   const { mockQuestions } = await loadMock();
+  const extra = await loadExtra();
   const customRaw = (typeof window !== "undefined") ? localStorage.getItem(CUSTOM_KEY) : null;
-  if (!customRaw) return mockQuestions;
+  if (!customRaw) return [...mockQuestions, ...extra];
   try {
     const parsed = JSON.parse(customRaw) as Question[];
     // basic sanitize: ensure required fields exist
@@ -34,10 +46,11 @@ export async function getQuestions(): Promise<Question[]> {
     );
     // simple merge rule: prefer custom if id duplicates
     const customIds = new Set(valid.map((q) => q.id));
-    const merged = [...valid, ...mockQuestions.filter((q) => !customIds.has(q.id))];
+    const baseMerged = [...mockQuestions, ...extra];
+    const merged = [...valid, ...baseMerged.filter((q) => !customIds.has(q.id))];
     return merged;
   } catch {
-    return mockQuestions;
+    return [...mockQuestions, ...extra];
   }
 }
 

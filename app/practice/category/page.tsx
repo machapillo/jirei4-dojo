@@ -125,12 +125,12 @@ function PracticeCategoryContent() {
   return (
     <main className="space-y-6">
       <PracticeHeader
-        title="分野別演習"
-        subtitle="分野・難易度・復習モードを選んで演習しましょう。"
+        title="🎯 分野別演習"
+        subtitle="分野・難易度・復習モードを選んで楽しくチャレンジ！"
         right={(
           <>
             <select
-              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              className="bg-neutral-900 border border-neutral-700 rounded-full px-4 py-3 text-base"
               value={category}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setCategory(e.target.value);
@@ -148,7 +148,7 @@ function PracticeCategoryContent() {
               ))}
             </select>
             <select
-              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              className="bg-neutral-900 border border-neutral-700 rounded-full px-4 py-3 text-base"
               value={difficulty}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setDifficulty(e.target.value);
@@ -163,7 +163,7 @@ function PracticeCategoryContent() {
               <option value="medium">普</option>
               <option value="hard">難</option>
             </select>
-            <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
+            <label className="flex items-center gap-2 text-base text-neutral-300 px-2">
               <input
                 type="checkbox"
                 checked={reviewOnly}
@@ -180,8 +180,8 @@ function PracticeCategoryContent() {
           </>
         )}
         below={(
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-neutral-500 mr-1">難易度クイック</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-sm text-neutral-400 mr-1">難易度クイック</span>
             {[
               { key: "", label: "全て" },
               { key: "easy", label: "易" },
@@ -199,10 +199,16 @@ function PracticeCategoryContent() {
                   setChecked(false);
                 }}
                 className={
-                  "text-xs px-3 py-1 rounded-full border transition-colors " +
+                  "text-base px-4 py-2 rounded-full border font-semibold transition-colors " +
                   (difficulty === d.key
-                    ? "border-emerald-600 bg-emerald-900/30 text-emerald-200"
-                    : "border-neutral-800 bg-neutral-950 text-neutral-300 hover:bg-neutral-900")
+                    ? (d.key === "easy"
+                        ? "border-emerald-600 bg-emerald-900/30 text-emerald-200"
+                        : d.key === "medium"
+                        ? "border-sky-600 bg-sky-900/30 text-sky-200"
+                        : d.key === "hard"
+                        ? "border-rose-600 bg-rose-900/30 text-rose-200"
+                        : "border-neutral-700 bg-neutral-800 text-neutral-100")
+                    : "border-neutral-700 bg-neutral-900 text-neutral-300 hover:bg-neutral-800")
                 }
                 aria-label={`難易度${d.label}`}
               >

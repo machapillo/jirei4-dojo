@@ -39,22 +39,22 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
-        <div className={`rounded-lg border p-4 transition-colors ${checked ? (isCorrect ? "border-emerald-700 bg-emerald-950/20" : "border-red-700 bg-red-950/10") : "border-neutral-800"}`}>
-          <div className="text-xs sm:text-[13px] text-neutral-400 mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <div className={`rounded-lg border p-5 transition-colors ${checked ? (isCorrect ? "border-emerald-700 bg-emerald-950/20" : "border-red-700 bg-red-950/10") : "border-neutral-800"}`}>
+          <div className="text-sm sm:text-base text-neutral-400 mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <span>
               {question.year}年 第{question.questionNumber}問 / {question.category}
               {question.difficulty ? ` / 難易度:${labelDiff(question.difficulty)}` : ""}
             </span>
             {metaRight ? <span className="text-neutral-500">{metaRight}</span> : null}
           </div>
-          <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed text-[15px] sm:text-base">{question.content}</p>
+          <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed text-base sm:text-lg">{question.content}</p>
         </div>
 
-        <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
-          <label className="text-sm text-neutral-300">解答{question.unit ? `（${question.unit}）` : ""}</label>
+        <div className="rounded-lg border border-neutral-800 p-5 space-y-4">
+          <label className="text-base text-neutral-300">解答{question.unit ? `（${question.unit}）` : ""}</label>
           {question.type === "single" && question.choices?.length ? (
             <select
-              className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+              className="w-full rounded-full bg-neutral-900 border border-neutral-700 px-4 py-3 text-base"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -67,7 +67,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
             </select>
           ) : (
             <input
-              className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+              className="w-full rounded-full bg-neutral-900 border border-neutral-700 px-4 py-3 text-base"
               placeholder="数値のみ等、指示に従って入力"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
@@ -75,8 +75,8 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               disabled={isTimeUp}
             />
           )}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex items-center gap-2 text-sm text-neutral-300">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <label className="flex items-center gap-3 text-base text-neutral-300">
               <input
                 type="checkbox"
                 checked={needsReview}
@@ -105,9 +105,9 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
       <div className="space-y-4">
         <Notepad />
         {checked && (
-          <div className="rounded-lg border border-neutral-800 p-4">
-            <h3 className="font-medium mb-2">解説</h3>
-            <p className="text-sm sm:text-[15px] text-neutral-300 whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
+          <div className="rounded-lg border border-neutral-800 p-5">
+            <h3 className="font-semibold text-base sm:text-lg mb-3">解説</h3>
+            <p className="text-base sm:text-lg text-neutral-300 whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
           </div>
         )}
       </div>
