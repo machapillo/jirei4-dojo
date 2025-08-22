@@ -7,6 +7,7 @@ import { listAnswers, saveAnswer } from "@/src/lib/answers";
 import { useUserStore } from "@/src/store/user";
 import type { UserState } from "@/src/store/user";
 import { PracticeQA } from "@/components/practice/qa";
+import { PracticeHeader } from "@/components/practice/header";
 
 export default function PracticeCategoryPage() {
   return (
@@ -123,62 +124,62 @@ function PracticeCategoryContent() {
 
   return (
     <main className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">分野別演習</h2>
-          <p className="text-sm text-neutral-400">分野・難易度・復習モードを選んで演習しましょう。</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select
-            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
-            value={category}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              setCategory(e.target.value);
-              setIdx(0);
-              setAnswer("");
-              setNeedsReview(false);
-              setChecked(false);
-            }}
-          >
-            <option value="">分野を選択</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          <select
-            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
-            value={difficulty}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              setDifficulty(e.target.value);
-              setIdx(0);
-              setAnswer("");
-              setNeedsReview(false);
-              setChecked(false);
-            }}
-          >
-            <option value="">難易度: 全て</option>
-            <option value="easy">易</option>
-            <option value="medium">普</option>
-            <option value="hard">難</option>
-          </select>
-          <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
-            <input
-              type="checkbox"
-              checked={reviewOnly}
-              onChange={(e) => {
-                setReviewOnly(e.target.checked);
+      <PracticeHeader
+        title="分野別演習"
+        subtitle="分野・難易度・復習モードを選んで演習しましょう。"
+        right={(
+          <>
+            <select
+              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              value={category}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                setCategory(e.target.value);
                 setIdx(0);
+                setAnswer("");
+                setNeedsReview(false);
+                setChecked(false);
               }}
-            />
-            復習モード（要復習のみ）
-          </label>
-          <Button variant="outline" onClick={onNext} disabled={!pool.length}>
-            次の問題
-          </Button>
-        </div>
-      </div>
+            >
+              <option value="">分野を選択</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <select
+              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              value={difficulty}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                setDifficulty(e.target.value);
+                setIdx(0);
+                setAnswer("");
+                setNeedsReview(false);
+                setChecked(false);
+              }}
+            >
+              <option value="">難易度: 全て</option>
+              <option value="easy">易</option>
+              <option value="medium">普</option>
+              <option value="hard">難</option>
+            </select>
+            <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
+              <input
+                type="checkbox"
+                checked={reviewOnly}
+                onChange={(e) => {
+                  setReviewOnly(e.target.checked);
+                  setIdx(0);
+                }}
+              />
+              復習モード（要復習のみ）
+            </label>
+            <Button variant="outline" onClick={onNext} disabled={!pool.length}>
+              次の問題
+            </Button>
+          </>
+        )}
+      />
 
       {!category ? (
         <p className="text-neutral-400 text-sm">上のセレクトから分野を選択してください。</p>

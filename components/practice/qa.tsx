@@ -2,7 +2,7 @@
 import { Notepad } from "@/components/notepad";
 import type { Question as ExtQuestion } from "@/src/lib/questionSource";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
+import { useMemo, KeyboardEvent } from "react";
 
 export type PracticeQAProps = {
   question: ExtQuestion;
@@ -19,10 +19,27 @@ export type PracticeQAProps = {
 export function PracticeQA({ question, answer, setAnswer, checked, needsReview, setNeedsReview, onCheck, isTimeUp, metaRight }: PracticeQAProps) {
   const isCorrect = useMemo(() => checkCorrect(answer, question), [answer, question]);
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (isTimeUp) return;
+    // Enter to check
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!checked) onCheck();
+      return;
+    }
+    // Number keys for single-choice
+    if (question.type === "single" && question.choices?.length) {
+      const idx = parseInt(e.key, 10);
+      if (!isNaN(idx) && idx >= 1 && idx <= Math.min(9, question.choices.length)) {
+        setAnswer(question.choices[idx - 1]);
+      }
+    }
+  };
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
-        <div className="rounded-lg border border-neutral-800 p-4">
+        <div className={`rounded-lg border p-4 transition-colors ${checked ? (isCorrect ? "border-emerald-700 bg-emerald-950/20" : "border-red-700 bg-red-950/10") : "border-neutral-800"}`}>
           <div className="text-xs text-neutral-400 mb-2 flex items-center justify-between">
             <span>
               {question.year}年 第{question.questionNumber}問 / {question.category}
@@ -40,11 +57,12 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
+              onKeyDown={handleKeyDown}
               disabled={isTimeUp}
             >
               <option value="">選択してください</option>
               {question.choices.map((c, i) => (
-                <option key={i} value={c}>{c}</option>
+                <option key={i} value={c}>{`${i + 1}. ${c}`}</option>
               ))}
             </select>
           ) : (
@@ -53,6 +71,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               placeholder="数値のみ等、指示に従って入力"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
+              onKeyDown={handleKeyDown}
               disabled={isTimeUp}
             />
           )}
@@ -71,7 +90,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
         </div>
 
         {checked && (
-          <div className="rounded-lg border border-neutral-800 p-4">
+          <div className={`rounded-lg border p-4 transition-all ${isCorrect ? "border-emerald-700 bg-emerald-950/20" : "border-red-700 bg-red-950/10"}`}>
             {isCorrect ? (
               <p className="text-green-400">正解！ +10XP</p>
             ) : (

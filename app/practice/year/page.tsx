@@ -6,6 +6,7 @@ import { listAnswers, saveAnswer } from "@/src/lib/answers";
 import { useUserStore } from "@/src/store/user";
 import type { UserState } from "@/src/store/user";
 import { PracticeQA } from "@/components/practice/qa";
+import { PracticeHeader } from "@/components/practice/header";
 
 export default function PracticeYearPage() {
   const [year, setYear] = useState<string>("");
@@ -100,70 +101,69 @@ export default function PracticeYearPage() {
 
   return (
     <main className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">年度別演習</h2>
-          <p className="text-sm text-neutral-400">年度・難易度・復習モードを選んで、本試験形式で解きましょう。</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select
-            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
-            value={year}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              setYear(e.target.value);
-              setIdx(0);
-              setAnswer("");
-              setNeedsReview(false);
-              setChecked(false);
-            }}
-          >
-            <option value="">年度を選択</option>
-            {years.map((y) => (
-              <option key={y} value={y}>{y}年</option>
-            ))}
-          </select>
-          <select
-            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
-            value={difficulty}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              setDifficulty(e.target.value);
-              setIdx(0);
-              setAnswer("");
-              setNeedsReview(false);
-              setChecked(false);
-            }}
-          >
-            <option value="">難易度: 全て</option>
-            <option value="easy">易</option>
-            <option value="medium">普</option>
-            <option value="hard">難</option>
-          </select>
-          <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
-            <input
-              type="checkbox"
-              checked={reviewOnly}
-              onChange={(e) => {
-                setReviewOnly(e.target.checked);
+      <PracticeHeader
+        title="年度別演習"
+        subtitle="年度・難易度・復習モードを選んで、本試験形式で解きましょう。"
+        right={(
+          <>
+            <select
+              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              value={year}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                setYear(e.target.value);
                 setIdx(0);
+                setAnswer("");
+                setNeedsReview(false);
+                setChecked(false);
               }}
-            />
-            復習モード（要復習のみ）
-          </label>
-          <Button variant="outline" onClick={onNext} disabled={!pool.length || isTimeUp}>
-            次の問題
-          </Button>
-          <Button variant="outline" onClick={resetTimer} disabled={!pool.length}>
-            タイマーリセット
-          </Button>
-        </div>
-      </div>
-
-      {year && (
-        <div className="rounded-lg border border-neutral-800 p-3 text-sm text-neutral-300 flex items-center gap-3">
-          <span className={isTimeUp ? "text-red-400" : "text-neutral-300"}>残り時間: {formatMMSS(remainingSec)}</span>
-          {isTimeUp && <span className="text-red-400">時間切れです</span>}
-        </div>
-      )}
+            >
+              <option value="">年度を選択</option>
+              {years.map((y) => (
+                <option key={y} value={y}>{y}年</option>
+              ))}
+            </select>
+            <select
+              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-2 text-sm"
+              value={difficulty}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                setDifficulty(e.target.value);
+                setIdx(0);
+                setAnswer("");
+                setNeedsReview(false);
+                setChecked(false);
+              }}
+            >
+              <option value="">難易度: 全て</option>
+              <option value="easy">易</option>
+              <option value="medium">普</option>
+              <option value="hard">難</option>
+            </select>
+            <label className="flex items-center gap-2 text-sm text-neutral-300 px-2">
+              <input
+                type="checkbox"
+                checked={reviewOnly}
+                onChange={(e) => {
+                  setReviewOnly(e.target.checked);
+                  setIdx(0);
+                }}
+              />
+              復習モード（要復習のみ）
+            </label>
+            <Button variant="outline" onClick={onNext} disabled={!pool.length || isTimeUp}>
+              次の問題
+            </Button>
+            <Button variant="outline" onClick={resetTimer} disabled={!pool.length}>
+              タイマーリセット
+            </Button>
+          </>
+        )}
+        below={year ? (
+          <div className="rounded-lg border border-neutral-800 p-3 text-sm text-neutral-300 flex items-center gap-3">
+            <span className={isTimeUp ? "text-red-400" : "text-neutral-300"}>残り時間: {formatMMSS(remainingSec)}</span>
+            {isTimeUp && <span className="text-red-400">時間切れです</span>}
+          </div>
+        ) : null}
+      />
 
       {!year ? (
         <p className="text-neutral-400 text-sm">上のセレクトから年度を選択してください。</p>

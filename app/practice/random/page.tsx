@@ -2,10 +2,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { getQuestions, type Question as ExtQuestion } from "@/src/lib/questionSource";
 import { Button } from "@/components/ui/button";
-import { Notepad } from "@/components/notepad";
 import { useUserStore } from "@/src/store/user";
 import { saveAnswer } from "@/src/lib/answers";
 import type { UserState } from "@/src/store/user";
+import { PracticeQA } from "@/components/practice/qa";
+import { PracticeHeader } from "@/components/practice/header";
 
 export default function RandomPracticePage() {
   const [seed, setSeed] = useState(0);
@@ -52,79 +53,24 @@ export default function RandomPracticePage() {
 
   return (
     <main className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">ランダム演習</h2>
-          <p className="text-sm text-neutral-400">全範囲からランダムに1問出題します。</p>
-        </div>
-        <Button variant="outline" onClick={onNext}>別の問題</Button>
-      </div>
+      <PracticeHeader
+        title="ランダム演習"
+        subtitle="全範囲からランダムに1問出題します。"
+        right={<Button variant="outline" onClick={onNext}>別の問題</Button>}
+      />
 
       {!question ? (
         <p className="text-neutral-400 text-sm">問題を読み込み中...</p>
       ) : (
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-4">
-          <div className="rounded-lg border border-neutral-800 p-4">
-            <div className="text-xs text-neutral-400 mb-2">{question.year}年 第{question.questionNumber}問 / {question.category}{question.difficulty ? ` / 難易度:${labelDiff(question.difficulty)}` : ""}</div>
-            <p className="text-neutral-100 whitespace-pre-wrap leading-relaxed">{question.content}</p>
-          </div>
-
-          <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
-            <label className="text-sm text-neutral-300">解答{question.unit ? `（${question.unit}）` : ""}</label>
-            {question.type === "single" && question.choices?.length ? (
-              <select
-                className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              >
-                <option value="">選択してください</option>
-                {question.choices.map((c, i) => (
-                  <option key={i} value={c}>{c}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
-                placeholder="数値のみ等、指示に従って入力"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-            )}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-neutral-300">
-                <input
-                  type="checkbox"
-                  checked={needsReview}
-                  onChange={(e) => setNeedsReview(e.target.checked)}
-                />
-                要復習に追加
-              </label>
-              <Button onClick={onCheck}>採点する</Button>
-            </div>
-          </div>
-
-          {checked && (
-            <div className="rounded-lg border border-neutral-800 p-4">
-              {checkCorrect(answer, question) ? (
-                <p className="text-green-400">正解！ +10XP</p>
-              ) : (
-                <p className="text-red-400">不正解</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <Notepad />
-          {checked && (
-            <div className="rounded-lg border border-neutral-800 p-4">
-              <h3 className="font-medium mb-2">解説</h3>
-              <p className="text-sm text-neutral-300 whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
-            </div>
-          )}
-        </div>
-      </div>
+        <PracticeQA
+          question={question}
+          answer={answer}
+          setAnswer={setAnswer}
+          checked={checked}
+          needsReview={needsReview}
+          setNeedsReview={setNeedsReview}
+          onCheck={onCheck}
+        />
       )}
     </main>
   );
