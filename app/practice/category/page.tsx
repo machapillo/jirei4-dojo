@@ -30,6 +30,7 @@ function PracticeCategoryContent() {
   const [needsReview, setNeedsReview] = useState(false);
   const markAnswerResult = useUserStore((s: UserState) => s.markAnswerResult);
   const uid = useUserStore((s: UserState) => s.uid);
+  const [showFiltersMobile, setShowFiltersMobile] = useState(false);
 
   useEffect(() => {
     getQuestions().then(setAllQuestions);
@@ -129,92 +130,167 @@ function PracticeCategoryContent() {
         subtitle="分野・難易度・復習モードを選んで楽しくチャレンジ！"
         right={(
           <>
-            <select
-              className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
-              value={category}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                setCategory(e.target.value);
-                setIdx(0);
-                setAnswer("");
-                setNeedsReview(false);
-                setChecked(false);
-              }}
-            >
-              <option value="">分野を選択</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <select
-              className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
-              value={difficulty}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                setDifficulty(e.target.value);
-                setIdx(0);
-                setAnswer("");
-                setNeedsReview(false);
-                setChecked(false);
-              }}
-            >
-              <option value="">難易度: 全て</option>
-              <option value="easy">易</option>
-              <option value="medium">普</option>
-              <option value="hard">難</option>
-            </select>
-            <label className="flex items-center gap-2 text-base text-neutral-700 px-2">
-              <input
-                type="checkbox"
-                checked={reviewOnly}
-                onChange={(e) => {
-                  setReviewOnly(e.target.checked);
-                  setIdx(0);
-                }}
-              />
-              復習モード（要復習のみ）
-            </label>
-            <Button size="sm" variant="outline" onClick={onNext} disabled={!pool.length}>
-              次の問題
-            </Button>
-          </>
-        )}
-        below={(
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm text-neutral-600 mr-1">難易度クイック</span>
-            {[
-              { key: "", label: "全て" },
-              { key: "easy", label: "易" },
-              { key: "medium", label: "普" },
-              { key: "hard", label: "難" },
-            ].map((d) => (
-              <button
-                key={d.key || "all"}
-                type="button"
-                onClick={() => {
-                  setDifficulty(d.key);
+            {/* Mobile: primary action and filter toggle */}
+            <div className="sm:hidden flex w-full gap-2">
+              <Button className="flex-1 rounded-full h-11 text-base" onClick={onNext} disabled={!pool.length}>
+                次へ
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full h-11 text-base px-4"
+                onClick={() => setShowFiltersMobile((v) => !v)}
+                aria-expanded={showFiltersMobile}
+                aria-controls="mobile-filters"
+              >
+                条件
+              </Button>
+            </div>
+
+            {/* Desktop: compact toolbar */}
+            <div className="hidden sm:flex flex-wrap items-center gap-2">
+              <select
+                className="bg-white border border-neutral-300 rounded-full px-4 py-2 text-sm text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+                value={category}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                  setCategory(e.target.value);
                   setIdx(0);
                   setAnswer("");
                   setNeedsReview(false);
                   setChecked(false);
                 }}
-                className={
-                  "text-base px-4 py-2 rounded-full border font-semibold transition-colors " +
-                  (difficulty === d.key
-                    ? (d.key === "easy"
-                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                        : d.key === "medium"
-                        ? "border-sky-500 bg-sky-50 text-sky-700"
-                        : d.key === "hard"
-                        ? "border-rose-500 bg-rose-50 text-rose-700"
-                        : "border-neutral-300 bg-neutral-100 text-neutral-800")
-                    : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50")
-                }
-                aria-label={`難易度${d.label}`}
               >
-                {d.label}
-              </button>
-            ))}
+                <option value="">分野を選択</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="bg-white border border-neutral-300 rounded-full px-4 py-2 text-sm text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+                value={difficulty}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                  setDifficulty(e.target.value);
+                  setIdx(0);
+                  setAnswer("");
+                  setNeedsReview(false);
+                  setChecked(false);
+                }}
+              >
+                <option value="">難易度: 全て</option>
+                <option value="easy">易</option>
+                <option value="medium">普</option>
+                <option value="hard">難</option>
+              </select>
+              <label className="flex items-center gap-2 text-sm text-neutral-700 px-2">
+                <input
+                  type="checkbox"
+                  checked={reviewOnly}
+                  onChange={(e) => {
+                    setReviewOnly(e.target.checked);
+                    setIdx(0);
+                  }}
+                />
+                復習モード
+              </label>
+              <Button size="sm" variant="outline" onClick={onNext} disabled={!pool.length}>
+                次の問題
+              </Button>
+            </div>
+          </>
+        )}
+        below={(
+          <div className="flex flex-col gap-3">
+            {/* Mobile filter panel */}
+            {showFiltersMobile && (
+              <div id="mobile-filters" className="sm:hidden rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm space-y-3">
+                <div className="grid grid-cols-1 gap-3">
+                  <select
+                    className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={category}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                      setCategory(e.target.value);
+                      setIdx(0);
+                      setAnswer("");
+                      setNeedsReview(false);
+                      setChecked(false);
+                    }}
+                  >
+                    <option value="">分野を選択</option>
+                    {categories.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="bg-white border border-neutral-300 rounded-full px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={difficulty}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                      setDifficulty(e.target.value);
+                      setIdx(0);
+                      setAnswer("");
+                      setNeedsReview(false);
+                      setChecked(false);
+                    }}
+                  >
+                    <option value="">難易度: 全て</option>
+                    <option value="easy">易</option>
+                    <option value="medium">普</option>
+                    <option value="hard">難</option>
+                  </select>
+                  <label className="flex items-center gap-3 text-base text-neutral-700">
+                    <input
+                      type="checkbox"
+                      checked={reviewOnly}
+                      onChange={(e) => {
+                        setReviewOnly(e.target.checked);
+                        setIdx(0);
+                      }}
+                    />
+                    復習モード（要復習のみ）
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Quick difficulty row */}
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-sm text-neutral-600 mr-1">難易度クイック</span>
+              {[
+                { key: "", label: "全て" },
+                { key: "easy", label: "易" },
+                { key: "medium", label: "普" },
+                { key: "hard", label: "難" },
+              ].map((d) => (
+                <button
+                  key={d.key || "all"}
+                  type="button"
+                  onClick={() => {
+                    setDifficulty(d.key);
+                    setIdx(0);
+                    setAnswer("");
+                    setNeedsReview(false);
+                    setChecked(false);
+                  }}
+                  className={
+                    "text-base px-4 py-2 rounded-full border font-semibold transition-colors " +
+                    (difficulty === d.key
+                      ? (d.key === "easy"
+                          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                          : d.key === "medium"
+                          ? "border-sky-500 bg-sky-50 text-sky-700"
+                          : d.key === "hard"
+                          ? "border-rose-500 bg-rose-50 text-rose-700"
+                          : "border-neutral-300 bg-neutral-100 text-neutral-800")
+                      : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50")
+                  }
+                  aria-label={`難易度${d.label}`}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       />
