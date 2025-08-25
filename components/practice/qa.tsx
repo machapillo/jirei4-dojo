@@ -38,8 +38,8 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <div className="space-y-4">
-        <div className={`rounded-xl border p-5 shadow-sm transition-colors ${checked ? (isCorrect ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50") : "border-neutral-200 bg-white"}`}>
+      <div className="space-y-5">
+        <div className={`rounded-xl border p-6 shadow-sm transition-colors ${checked ? (isCorrect ? "border-emerald-300 bg-emerald-50 animate-pop" : "border-rose-300 bg-rose-50 animate-pop") : "border-neutral-200 bg-white"}`}>
           <div className="text-sm sm:text-base text-neutral-600 mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <span>
               {question.year}年 第{question.questionNumber}問 / {question.category}
@@ -75,7 +75,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               disabled={isTimeUp}
             />
           )}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-1">
             <label className="flex items-center gap-3 text-base text-neutral-700">
               <input
                 type="checkbox"
@@ -92,7 +92,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
         </div>
 
         {checked && (
-          <div className={`rounded-lg border p-4 transition-all ${isCorrect ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50"}`}>
+          <div className={`rounded-lg border p-4 shadow-sm transition-all ${isCorrect ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50"}`}>
             {isCorrect ? (
               <p className="text-emerald-700">正解！ +10XP</p>
             ) : (

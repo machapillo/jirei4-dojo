@@ -174,7 +174,7 @@ function PracticeCategoryContent() {
               />
               復習モード（要復習のみ）
             </label>
-            <Button variant="outline" onClick={onNext} disabled={!pool.length}>
+            <Button size="sm" variant="outline" onClick={onNext} disabled={!pool.length}>
               次の問題
             </Button>
           </>
