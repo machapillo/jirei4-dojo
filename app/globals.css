@@ -34,4 +34,4 @@ html { scroll-behavior: smooth; }
 }
 
 /* Link default styling */
-a { @apply text-brand.blue hover:opacity-90; }
+a { @apply text-brand-blue hover:opacity-90; }
