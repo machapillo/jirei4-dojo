@@ -311,6 +311,20 @@ function PracticeCategoryContent() {
           metaRight={`（${idx + 1}/${pool.length}）`}
         />
       )}
+
+      {/* Spacer for sticky bar on mobile */}
+      <div className="sm:hidden h-16" />
+
+      {/* Mobile sticky action bar */}
+      {category && question && (
+        <div className="sm:hidden fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+          <div className="container px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
+            <Button className="w-full rounded-full h-12 text-base font-semibold" onClick={onNext} disabled={!pool.length}>
+              次へ
+            </Button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
