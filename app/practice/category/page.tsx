@@ -132,17 +132,17 @@ function PracticeCategoryContent() {
           <>
             {/* Mobile: primary action and filter toggle */}
             <div className="sm:hidden flex w-full gap-2">
-              <Button className="flex-1 rounded-full h-11 text-base" onClick={onNext} disabled={!pool.length}>
-                次へ
+              <Button className="flex-1 rounded-full h-11 text-base active:scale-[0.98] transition" onClick={onNext} disabled={!pool.length} aria-label="次の問題へ進む">
+                次へ ▶︎
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full h-11 text-base px-4"
+                className="rounded-full h-11 text-base px-4 active:scale-[0.98] transition"
                 onClick={() => setShowFiltersMobile((v) => !v)}
                 aria-expanded={showFiltersMobile}
                 aria-controls="mobile-filters"
               >
-                条件
+                条件 ⚙️
               </Button>
             </div>
 
@@ -193,8 +193,8 @@ function PracticeCategoryContent() {
                 />
                 復習モード
               </label>
-              <Button size="sm" variant="outline" onClick={onNext} disabled={!pool.length}>
-                次の問題
+              <Button size="sm" variant="outline" className="active:scale-[0.98] transition" onClick={onNext} disabled={!pool.length} aria-label="次の問題へ進む">
+                次の問題 ▶︎
               </Button>
             </div>
           </>
@@ -248,48 +248,58 @@ function PracticeCategoryContent() {
                         setIdx(0);
                       }}
                     />
-                    復習モード（要復習のみ）
+                    復習モード（要復習のみ）🔖
                   </label>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <Button variant="outline" className="flex-1 rounded-full active:scale-[0.98] transition" onClick={() => setShowFiltersMobile(false)} aria-label="フィルターを閉じる">
+                    閉じる
+                  </Button>
+                  <Button className="flex-1 rounded-full active:scale-[0.98] transition" onClick={() => setShowFiltersMobile(false)} aria-label="フィルターを適用する">
+                    適用
+                  </Button>
                 </div>
               </div>
             )}
 
             {/* Quick difficulty row */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm text-neutral-600 mr-1">難易度クイック</span>
-              {[
+            <div className="flex flex-col gap-2">
+              <span className="text-sm text-neutral-600">難易度クイック</span>
+              <div className="grid grid-cols-4 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
+                {[
                 { key: "", label: "全て" },
                 { key: "easy", label: "易" },
                 { key: "medium", label: "普" },
                 { key: "hard", label: "難" },
-              ].map((d) => (
-                <button
-                  key={d.key || "all"}
-                  type="button"
-                  onClick={() => {
-                    setDifficulty(d.key);
-                    setIdx(0);
-                    setAnswer("");
-                    setNeedsReview(false);
-                    setChecked(false);
-                  }}
-                  className={
-                    "text-base px-4 py-2 rounded-full border font-semibold transition-colors " +
-                    (difficulty === d.key
-                      ? (d.key === "easy"
-                          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                          : d.key === "medium"
-                          ? "border-sky-500 bg-sky-50 text-sky-700"
-                          : d.key === "hard"
-                          ? "border-rose-500 bg-rose-50 text-rose-700"
-                          : "border-neutral-300 bg-neutral-100 text-neutral-800")
-                      : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50")
-                  }
-                  aria-label={`難易度${d.label}`}
-                >
-                  {d.label}
-                </button>
-              ))}
+                ].map((d) => (
+                  <button
+                    key={d.key || "all"}
+                    type="button"
+                    onClick={() => {
+                      setDifficulty(d.key);
+                      setIdx(0);
+                      setAnswer("");
+                      setNeedsReview(false);
+                      setChecked(false);
+                    }}
+                    className={
+                      "text-base px-4 py-2 rounded-full border font-semibold transition-colors active:scale-[0.98] " +
+                      (difficulty === d.key
+                        ? (d.key === "easy"
+                            ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                            : d.key === "medium"
+                            ? "border-sky-500 bg-sky-50 text-sky-700"
+                            : d.key === "hard"
+                            ? "border-rose-500 bg-rose-50 text-rose-700"
+                            : "border-neutral-300 bg-neutral-100 text-neutral-800")
+                        : "border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50")
+                    }
+                    aria-label={`難易度${d.label}`}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -319,8 +329,8 @@ function PracticeCategoryContent() {
       {category && question && (
         <div className="sm:hidden fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
           <div className="container px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
-            <Button className="w-full rounded-full h-12 text-base font-semibold" onClick={onNext} disabled={!pool.length}>
-              次へ
+            <Button className="w-full rounded-full h-12 text-base font-semibold active:scale-[0.98] transition" onClick={onNext} disabled={!pool.length} aria-label="次の問題へ進む">
+              次へ ▶︎
             </Button>
           </div>
         </div>
