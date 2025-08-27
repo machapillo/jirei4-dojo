@@ -17,6 +17,11 @@ body {
   @apply bg-white text-neutral-900 text-[15px] sm:text-base antialiased;
 }
 
+/* Dark mode base */
+.dark body {
+  @apply bg-neutral-950 text-neutral-100;
+}
+
 .container { @apply mx-auto px-4 max-w-7xl; }
 
 /* Smooth scroll for better feel */
@@ -62,13 +67,51 @@ a { @apply text-brand-blue hover:opacity-90; }
     background-color: rgba(255, 255, 255, 0.82);
     backdrop-filter: saturate(150%) blur(10px);
   }
+  .dark .glass {
+    background-color: rgba(17, 24, 39, 0.6); /* slate-900 ~80% */
+    backdrop-filter: saturate(140%) blur(10px);
+  }
 
   /* Press/touch feedback */
   .pressable { transition: transform 120ms ease, box-shadow 120ms ease; }
   .pressable:active { transform: scale(0.98); }
+
+  /* Pop animation utility for correct/incorrect emphasis */
+  .animate-pop { animation: pop-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  /* Sparkle effect for subtle celebration */
+  .sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .sparkles::before,
+  .sparkles::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(16,185,129,0.9), rgba(16,185,129,0) 70%);
+    animation: sparkle-burst 700ms ease-out forwards;
+  }
+  .sparkles::before { top: 10%; left: 14%; }
+  .sparkles::after { bottom: 18%; right: 12%; animation-delay: 80ms; }
 }
 
 @keyframes skeleton-shimmer {
   0% { transform: translateX(-40%); }
   100% { transform: translateX(40%); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.98); opacity: 0.0; }
+  60% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes sparkle-burst {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(10px, -14px) scale(1.2); opacity: 0; }
 }

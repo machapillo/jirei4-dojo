@@ -39,7 +39,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-5">
-        <div className={`rounded-xl border p-6 shadow-sm transition-colors ${checked ? (isCorrect ? "border-emerald-300 bg-emerald-50 animate-pop" : "border-rose-300 bg-rose-50 animate-pop") : "border-neutral-200 bg-white"}`}>
+        <div className={`relative rounded-xl border p-6 shadow-sm transition-colors ${checked ? (isCorrect ? "border-emerald-300 bg-emerald-50 animate-pop" : "border-rose-300 bg-rose-50 animate-pop") : "border-neutral-200 bg-white"}`}>
           <div className="text-sm sm:text-base text-neutral-600 mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <span>
               {question.year}年 第{question.questionNumber}問 / {question.category}
@@ -48,6 +48,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
             {metaRight ? <span className="text-neutral-500">{metaRight}</span> : null}
           </div>
           <p className="text-neutral-900 whitespace-pre-wrap leading-relaxed text-base sm:text-lg">{question.content}</p>
+          {checked && isCorrect ? <div className="sparkles" aria-hidden="true" /> : null}
         </div>
 
         <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-4 shadow-sm">

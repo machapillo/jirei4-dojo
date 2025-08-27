@@ -14,6 +14,33 @@ import {
   CartesianGrid,
 } from "recharts";
 
+type TooltipProps = {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+};
+
+function CustomTooltip({ active, payload, label }: TooltipProps) {
+  if (!active || !payload || !payload.length) return null;
+  const count = payload.find((p) => p.dataKey === "count")?.value;
+  const rate = payload.find((p) => p.dataKey === "rate")?.value;
+  return (
+    <div className="rounded-lg border bg-white px-3 py-2 text-xs shadow-sm dark:border-neutral-700 dark:bg-neutral-900/95 dark:text-neutral-100">
+      <div className="font-medium text-neutral-700 dark:text-neutral-200 mb-1">{label}</div>
+      <div className="space-y-0.5">
+        <div className="flex items-center justify-between gap-6">
+          <span className="text-neutral-500 dark:text-neutral-400">回答数</span>
+          <span className="font-semibold text-neutral-800 dark:text-neutral-100">{count ?? 0}</span>
+        </div>
+        <div className="flex items-center justify-between gap-6">
+          <span className="text-neutral-500 dark:text-neutral-400">正答率</span>
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400">{typeof rate === "number" ? `${rate}%` : "0%"}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function GamePage() {
   const uid = useUserStore((s: UserState) => s.uid);
   const xp = useUserStore((s: UserState) => s.xp);
@@ -156,7 +183,7 @@ export default function GamePage() {
                 <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} />
                 <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} allowDecimals={false} />
                 <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#e5e7eb" }} domain={[0, 100]} />
-                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", color: "#111827" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"]) } />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f1f5f9", opacity: 0.5 }} wrapperStyle={{ outline: "none" }} />
                 <Legend wrapperStyle={{ color: "#6b7280" }} />
                 <Bar yAxisId="left" dataKey="count" name="回答数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#16a34a" strokeWidth={2} dot={{ r: 2 }} />

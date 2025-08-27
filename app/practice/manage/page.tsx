@@ -9,11 +9,13 @@ export default function PracticeManagePage() {
   const [okMsg, setOkMsg] = useState<string | null>(null);
   const [mergedCount, setMergedCount] = useState(0);
   const [customCount, setCustomCount] = useState(0);
+  const [audit, setAudit] = useState<{ total: number; issues: string[] }>({ total: 0, issues: [] });
 
   useEffect(() => {
     (async () => {
       const all = await getQuestions();
       setMergedCount(all.length);
+      setAudit(runAudit(all));
       const raw = typeof window !== "undefined" ? localStorage.getItem("customQuestions") : null;
       if (raw) {
         try {
@@ -43,6 +45,42 @@ export default function PracticeManagePage() {
       setError(`JSONの解析に失敗しました: ${e?.message || e}`);
     }
   };
+
+  function runAudit(all: Question[]) {
+    const issues: string[] = [];
+    const idSet = new Set<string>();
+    for (const q of all) {
+      // Required fields
+      if (!q.id || typeof q.year !== "number" || typeof q.questionNumber !== "number" || !q.category || !q.content || !q.solution || !q.explanation) {
+        issues.push(`[${q.id || "(no id)"}] 必須フィールドの欠落があります`);
+      }
+      // Duplicate id
+      if (q.id) {
+        if (idSet.has(q.id)) issues.push(`[${q.id}] 重複IDが見つかりました`);
+        idSet.add(q.id);
+      }
+      // Single-choice must contain solution in choices
+      if (q.type === "single") {
+        if (!q.choices || !q.choices.length) {
+          issues.push(`[${q.id}] 単一選択ですがchoicesが空です`);
+        } else if (!q.choices.some((c) => normalize(c) === normalize(String(q.solution)))) {
+          issues.push(`[${q.id}] 単一選択の選択肢にsolutionが含まれていません`);
+        }
+      }
+      // Rounding sanity: numeric solution should be number if rounding specified
+      if (q.rounding) {
+        const num = Number(normalize(String(q.solution)));
+        if (Number.isNaN(num)) {
+          issues.push(`[${q.id}] rounding指定がありますがsolutionが数値に変換できません`);
+        }
+      }
+    }
+    return { total: all.length, issues };
+  }
+
+  function normalize(v: string) {
+    return (v || "").toString().replace(/[\,\s]/g, "").trim();
+  }
 
   const onClear = () => {
     clearCustomQuestions();
@@ -94,6 +132,28 @@ export default function PracticeManagePage() {
         </div>
         {okMsg && <div className="text-green-400 text-sm">{okMsg}</div>}
         {error && <div className="text-red-400 text-sm">{error}</div>}
+      </div>
+
+      <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-neutral-300">監査レポート</div>
+          <div className="text-xs text-neutral-400">全{audit.total}件中、不備 {audit.issues.length}件</div>
+        </div>
+        {!audit.issues.length ? (
+          <div className="text-emerald-400 text-sm">不備は見つかりませんでした。</div>
+        ) : (
+          <ul className="list-disc pl-5 space-y-1 text-sm text-red-300 max-h-60 overflow-auto">
+            {audit.issues.map((m, i) => (
+              <li key={i}>{m}</li>
+            ))}
+          </ul>
+        )}
+        <div>
+          <Button variant="outline" onClick={async () => {
+            const all = await getQuestions();
+            setAudit(runAudit(all));
+          }}>再チェック</Button>
+        </div>
       </div>
 
       <div className="text-xs text-neutral-500 space-y-2">

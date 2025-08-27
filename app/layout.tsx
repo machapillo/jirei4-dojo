@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Nav } from "@/components/nav";
 import { Noto_Sans_JP } from "next/font/google";
+import { RouteTransition } from "@/components/route-transition";
 
 export const metadata: Metadata = {
   title: "事例IVマスター",
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </header>
           <main className="container py-6">
-            {children}
+            <RouteTransition>
+              {children}
+            </RouteTransition>
           </main>
         </ThemeProvider>
       </body>
