@@ -7,7 +7,7 @@ export default function ProfilePage() {
     <main className="container space-y-6 py-6">
       <h2 className="text-lg font-semibold">プロフィール</h2>
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <h3 className="font-medium mb-2">ステータス</h3>
           <ul className="text-sm text-neutral-700 space-y-1">
             <li>メール: {email ?? "未ログイン"}</li>
@@ -16,7 +16,7 @@ export default function ProfilePage() {
             <li>学習ストリーク: {currentStreak}日</li>
           </ul>
         </div>
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <h3 className="font-medium mb-2">バッジ</h3>
           {achievements.length === 0 ? (
             <p className="text-sm text-neutral-600">まだバッジがありません。</p>

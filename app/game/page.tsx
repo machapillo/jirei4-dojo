@@ -75,13 +75,13 @@ export default function GamePage() {
       </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm">レベル</div>
           <div className="text-3xl font-bold">{level}</div>
           <div className="mt-3">
             <div className="h-2 bg-neutral-200 rounded">
               <div
-                className="h-2 bg-brand.blue rounded"
+                className="h-2 bg-brand-blue rounded"
                 style={{ width: `${levelProgress}%` }}
               />
             </div>
@@ -89,26 +89,26 @@ export default function GamePage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm">総XP</div>
           <div className="text-3xl font-bold">{xp}</div>
         </div>
 
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm">現在のストリーク</div>
           <div className="text-3xl font-bold">{currentStreak} 日</div>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm mb-2">成績</div>
           <div className="text-neutral-700 text-sm">解答数: {stats.total}</div>
           <div className="text-neutral-700 text-sm">正解数: {stats.correct}</div>
           <div className="text-neutral-700 text-sm">正答率: {stats.rate}%</div>
         </div>
 
-        <div className="md:col-span-2 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="md:col-span-2 rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm mb-3">直近の解答</div>
           {!recent.length ? (
             <div className="text-neutral-500 text-sm">まだ履歴がありません。</div>
@@ -127,7 +127,7 @@ export default function GamePage() {
         </div>
       </section>
 
-      <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
         <div className="text-neutral-700 text-sm mb-3">7日間のトレンド（回答数/正答率）</div>
         <div style={{ width: "100%", height: 260 }}>
           <ResponsiveContainer>
@@ -145,7 +145,7 @@ export default function GamePage() {
         </div>
       </section>
 
-      <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
         <div className="text-neutral-700 text-sm mb-3">実績</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {ALL_BADGES.map((b) => {

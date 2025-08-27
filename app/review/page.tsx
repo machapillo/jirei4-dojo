@@ -76,21 +76,21 @@ export default function ReviewPage() {
         <label className="flex items-center gap-2">
           期間: 自
           <input
-            className="bg-white border border-neutral-300 rounded-md px-2 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
+            className="bg-white border border-neutral-300 rounded-md px-2 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/40"
             type="date"
             value={fromDate}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFromDate(e.target.value)}
           />
           至
           <input
-            className="bg-white border border-neutral-300 rounded-md px-2 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand.blue/40"
+            className="bg-white border border-neutral-300 rounded-md px-2 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/40"
             type="date"
             value={toDate}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setToDate(e.target.value)}
           />
         </label>
         <button
-          className="ml-auto border border-neutral-300 bg-white text-neutral-700 rounded-md px-3 py-1 shadow-sm hover:bg-neutral-50"
+          className="ml-auto border border-neutral-300 bg-white text-neutral-700 rounded-md px-3 py-1 shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-brand-blue/40"
           onClick={fetchItems}
           disabled={loading}
         >
@@ -107,7 +107,7 @@ export default function ReviewPage() {
           {reviewTargets.map((a: SavedAnswer, i: number) => {
             const q = mockQuestions.find((q) => q.id === a.questionId);
             return (
-              <li key={`${a.questionId}-${i}`} className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+              <li key={`${a.questionId}-${i}`} className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
                 <div className="text-xs text-neutral-500 mb-2">
                   {q ? `${q.year}年 第${q.questionNumber}問 / ${q.category}` : a.questionId}
                   {" · "}

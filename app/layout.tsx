@@ -14,17 +14,19 @@ const fontSans = Noto_Sans_JP({ subsets: ["latin"], weight: ["400", "500", "700"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className={`${fontSans.variable} font-sans antialiased`}> 
+      <body className={`${fontSans.variable} font-sans antialiased`}>
         <ThemeProvider>
-          <div className="container py-6">
-            <header className="mb-6">
-              <div className="flex items-center justify-between gap-4 mb-2">
+          <header className="sticky top-0 z-50 w-full border-b bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+            <div className="container py-4">
+              <div className="flex items-center justify-between gap-4 mb-3">
                 <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight">事例IVマスター</h1>
               </div>
               <Nav />
-            </header>
+            </div>
+          </header>
+          <main className="container py-6">
             {children}
-          </div>
+          </main>
         </ThemeProvider>
       </body>
     </html>

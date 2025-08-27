@@ -54,7 +54,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
           <label className="text-base text-neutral-700">解答{question.unit ? `（${question.unit}）` : ""}</label>
           {question.type === "single" && question.choices?.length ? (
             <select
-              className="w-full rounded-full bg-white border border-neutral-300 px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+              className="w-full rounded-full bg-white border border-neutral-300 px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -67,7 +67,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
             </select>
           ) : (
             <input
-              className="w-full rounded-full bg-white border border-neutral-300 px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200"
+              className="w-full rounded-full bg-white border border-neutral-300 px-4 py-3 text-base text-neutral-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
               placeholder="数値/式を入力可（例: (1800000+200000)/900）"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
@@ -75,7 +75,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               disabled={isTimeUp}
             />
           )}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-1">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-1 sticky bottom-0 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/75 border-t -mx-5 px-5 py-3 sm:static sm:bg-transparent sm:backdrop-blur-0 sm:border-0 sm:mx-0 sm:px-0 sm:py-0">
             <label className="flex items-center gap-3 text-base text-neutral-700">
               <input
                 type="checkbox"
