@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import type { Route } from "next";
 import { Home, BookOpenText, Gamepad2, NotebookTabs, Library, User2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const tabs: { href: Route; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
   { href: "/", label: "ホーム", Icon: Home },
@@ -27,7 +28,7 @@ export function Nav() {
             href={t.href}
             aria-current={active ? "page" : undefined}
             className={clsx(
-              "flex items-center gap-2 rounded-full px-3.5 py-2 border transition whitespace-nowrap",
+              "relative flex items-center gap-2 rounded-full px-3.5 py-2 border transition whitespace-nowrap",
               active
                 ? "bg-brand-blue text-white border-brand-blue shadow-sm"
                 : "border-neutral-200 text-neutral-700 hover:bg-neutral-50"
@@ -36,6 +37,14 @@ export function Nav() {
             <Icon className="h-4 w-4" />
             <span className="hidden sm:inline-block">{t.label}</span>
             <span className="sm:hidden">{t.label}</span>
+            {active && (
+              <motion.span
+                layoutId="nav-underline"
+                className="absolute -bottom-1 left-3 right-3 h-0.5 rounded-full"
+                style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
+                transition={{ type: "spring", stiffness: 500, damping: 40, mass: 0.5 }}
+              />
+            )}
           </Link>
         );
       })}

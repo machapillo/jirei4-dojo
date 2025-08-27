@@ -22,12 +22,20 @@ export default function GamePage() {
   const achievements = useUserStore((s: UserState) => s.achievements);
 
   const [answers, setAnswers] = useState<SavedAnswer[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     (async () => {
+      setLoading(true);
       const res = await listAnswers(uid);
+      if (!mounted) return;
       setAnswers(res);
+      setLoading(false);
     })();
+    return () => {
+      mounted = false;
+    };
   }, [uid]);
 
   const stats = useMemo(() => {
@@ -110,7 +118,16 @@ export default function GamePage() {
 
         <div className="md:col-span-2 rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
           <div className="text-neutral-700 text-sm mb-3">直近の解答</div>
-          {!recent.length ? (
+          {loading ? (
+            <ul className="space-y-2 text-sm">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <li key={i} className="flex items-center justify-between">
+                  <span className="h-3 w-40 skeleton rounded"></span>
+                  <span className="h-3 w-12 skeleton rounded"></span>
+                </li>
+              ))}
+            </ul>
+          ) : !recent.length ? (
             <div className="text-neutral-500 text-sm">まだ履歴がありません。</div>
           ) : (
             <ul className="space-y-2 text-sm">
@@ -129,20 +146,24 @@ export default function GamePage() {
 
       <section className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
         <div className="text-neutral-700 text-sm mb-3">7日間のトレンド（回答数/正答率）</div>
-        <div style={{ width: "100%", height: 260 }}>
-          <ResponsiveContainer>
-            <ComposedChart data={trend7d} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} />
-              <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} allowDecimals={false} />
-              <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#e5e7eb" }} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", color: "#111827" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"]) } />
-              <Legend wrapperStyle={{ color: "#6b7280" }} />
-              <Bar yAxisId="left" dataKey="count" name="回答数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#16a34a" strokeWidth={2} dot={{ r: 2 }} />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
+        {loading ? (
+          <div className="h-[260px] rounded-md skeleton"></div>
+        ) : (
+          <div style={{ width: "100%", height: 260 }}>
+            <ResponsiveContainer>
+              <ComposedChart data={trend7d} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="day" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} />
+                <YAxis yAxisId="left" stroke="#9ca3af" tickLine={false} axisLine={{ stroke: "#e5e7eb" }} allowDecimals={false} />
+                <YAxis yAxisId="right" orientation="right" stroke="#9ca3af" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={{ stroke: "#e5e7eb" }} domain={[0, 100]} />
+                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", color: "#111827" }} formatter={(v: any, n: any) => (n === "rate" ? [`${v}%`, "正答率"] : [v, "回答数"]) } />
+                <Legend wrapperStyle={{ color: "#6b7280" }} />
+                <Bar yAxisId="left" dataKey="count" name="回答数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Line yAxisId="right" type="monotone" dataKey="rate" name="正答率" stroke="#16a34a" strokeWidth={2} dot={{ r: 2 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </section>
 
       <section className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">

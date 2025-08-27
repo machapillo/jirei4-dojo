@@ -75,7 +75,7 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               disabled={isTimeUp}
             />
           )}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-1 sticky bottom-0 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/75 border-t -mx-5 px-5 py-3 sm:static sm:bg-transparent sm:backdrop-blur-0 sm:border-0 sm:mx-0 sm:px-0 sm:py-0">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-1 sticky bottom-0 glass border-t -mx-5 px-5 py-3 pb-safe shadow-[0_-6px_20px_-12px_rgba(0,0,0,0.25)] sm:static sm:bg-transparent sm:backdrop-blur-0 sm:border-0 sm:shadow-none sm:mx-0 sm:px-0 sm:py-0">
             <label className="flex items-center gap-3 text-base text-neutral-700">
               <input
                 type="checkbox"
@@ -86,7 +86,9 @@ export function PracticeQA({ question, answer, setAnswer, checked, needsReview, 
               要復習に追加
             </label>
             <div className="flex gap-2">
-              <Button onClick={onCheck} disabled={isTimeUp}>採点する</Button>
+              <Button onClick={onCheck} disabled={isTimeUp} className="pressable rounded-full px-6 py-3 text-base sm:text-sm shadow-md">
+                採点する
+              </Button>
             </div>
           </div>
         </div>

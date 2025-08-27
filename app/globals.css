@@ -43,4 +43,32 @@ a { @apply text-brand-blue hover:opacity-90; }
     scrollbar-width: none; /* Firefox */
   }
   .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Skeleton shimmer */
+  .skeleton { @apply relative overflow-hidden bg-neutral-100; }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0% -150% 0% -150%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    animation: skeleton-shimmer 1.2s infinite;
+  }
+
+  /* Safe-area aware padding for bottom fixed bars */
+  .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem); }
+
+  /* Glassy surface helper for sticky bars/cards */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: saturate(150%) blur(10px);
+  }
+
+  /* Press/touch feedback */
+  .pressable { transition: transform 120ms ease, box-shadow 120ms ease; }
+  .pressable:active { transform: scale(0.98); }
+}
+
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-40%); }
+  100% { transform: translateX(40%); }
 }

@@ -99,7 +99,15 @@ export default function ReviewPage() {
       </section>
 
       {loading ? (
-        <p className="text-neutral-500 text-sm">読み込み中...</p>
+        <ul className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <li key={i} className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm">
+              <div className="h-3 w-48 skeleton rounded mb-3"></div>
+              <div className="h-3 w-full skeleton rounded mb-2"></div>
+              <div className="h-3 w-2/3 skeleton rounded"></div>
+            </li>
+          ))}
+        </ul>
       ) : reviewTargets.length === 0 ? (
         <p className="text-neutral-500 text-sm">復習対象はまだありません。</p>
       ) : (
