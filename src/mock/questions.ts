@@ -56,6 +56,7 @@ export const mockQuestions: Question[] = [
       "EOQ = √(2DS/H)。D=1,200, S=3,000, H=20 → √(360,000)=600個。",
     difficulty: "easy",
     unit: "個",
+    rounding: "round",
   },
   {
     id: "q2b",
@@ -79,6 +80,7 @@ export const mockQuestions: Question[] = [
     solution: "115000", // 概算で約915,000-800,000=115,000
     explanation:
       "NPV = Σ(CF/(1+0.08)^t) - 800,000 ≈ 115,000円（概算）。",
+    rounding: "round",
   },
   {
     id: "q3b",
@@ -141,6 +143,7 @@ export const mockQuestions: Question[] = [
     solution: "-51316",
     explanation:
       "現在価値: 300,000/1.05=285,714、350,000/1.05^2≈317,460、400,000/1.05^3≈345,510。合計≈948,684。NPV=948,684-1,000,000≈-51,316。",
+    rounding: "round",
   },
   {
     id: "q5b",
@@ -177,6 +180,7 @@ export const mockQuestions: Question[] = [
     solution: "600",
     explanation:
       "必要数量 = (固定費+目標利益)/(販売価格-変動費)=(500,000+100,000)/1,000=600個。",
+    rounding: "round",
   },
   {
     id: "q6b",
@@ -188,6 +192,7 @@ export const mockQuestions: Question[] = [
     solution: "63",
     explanation:
       "1年の発注回数=2000/500=4回。間隔=250/4=62.5→63日。",
+    rounding: "round",
   },
   {
     id: "q6c",
@@ -201,6 +206,7 @@ export const mockQuestions: Question[] = [
       "ROA=当期純利益/総資産×100=100/2000×100=5%。",
     difficulty: "easy",
     unit: "%",
+    rounding: "round",
   },
   // 2023 追加
   {
@@ -213,6 +219,7 @@ export const mockQuestions: Question[] = [
     solution: "19750",
     explanation:
       "年金現価係数(6%,4年)≈3.465。現在価値=150,000×3.465=519,750。NPV=519,750-500,000≈19,750。",
+    rounding: "round",
   },
   {
     id: "q7b",
@@ -237,6 +244,7 @@ export const mockQuestions: Question[] = [
       "800/10,000×100=8%。",
     difficulty: "easy",
     unit: "%",
+    rounding: "round",
   },
   // 練習用追加（年度混在）
   {
@@ -271,6 +279,7 @@ export const mockQuestions: Question[] = [
     solution: "8",
     explanation:
       "ROE=120/1,500×100=8%。",
+    rounding: "round",
   },
   {
     id: "q11",
@@ -369,6 +378,7 @@ export const mockQuestions: Question[] = [
     explanation:
       "交点X=8/3,Y=8/3で目的=5×8/3+4×8/3=24が最大。",
     difficulty: "hard",
+    rounding: "round",
   },
   {
     id: "q19",

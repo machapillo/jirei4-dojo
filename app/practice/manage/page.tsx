@@ -9,7 +9,7 @@ export default function PracticeManagePage() {
   const [okMsg, setOkMsg] = useState<string | null>(null);
   const [mergedCount, setMergedCount] = useState(0);
   const [customCount, setCustomCount] = useState(0);
-  const [audit, setAudit] = useState<{ total: number; issues: string[] }>({ total: 0, issues: [] });
+  const [audit, setAudit] = useState<{ total: number; issues: string[]; incorrectCount: number; incorrectPercent: number }>({ total: 0, issues: [], incorrectCount: 0, incorrectPercent: 0 });
 
   useEffect(() => {
     (async () => {
@@ -48,34 +48,113 @@ export default function PracticeManagePage() {
 
   function runAudit(all: Question[]) {
     const issues: string[] = [];
+    let incorrectCount = 0;
     const idSet = new Set<string>();
+
     for (const q of all) {
-      // Required fields
+      const id = q.id || "(no id)";
+      const solNorm = normalize(String(q.solution));
+      const solNum = Number(solNorm);
+      const content = q.content || "";
+      const expl = q.explanation || "";
+
+      // Required fields (structural)
       if (!q.id || typeof q.year !== "number" || typeof q.questionNumber !== "number" || !q.category || !q.content || !q.solution || !q.explanation) {
-        issues.push(`[${q.id || "(no id)"}] 必須フィールドの欠落があります`);
+        issues.push(`[${id}] 必須フィールドの欠落があります`);
       }
-      // Duplicate id
+
+      // Duplicate id (structural)
       if (q.id) {
-        if (idSet.has(q.id)) issues.push(`[${q.id}] 重複IDが見つかりました`);
+        if (idSet.has(q.id)) issues.push(`[${id}] 重複IDが見つかりました`);
         idSet.add(q.id);
       }
-      // Single-choice must contain solution in choices
+
+      // Single-choice consistency (correctness)
       if (q.type === "single") {
         if (!q.choices || !q.choices.length) {
-          issues.push(`[${q.id}] 単一選択ですがchoicesが空です`);
-        } else if (!q.choices.some((c) => normalize(c) === normalize(String(q.solution)))) {
-          issues.push(`[${q.id}] 単一選択の選択肢にsolutionが含まれていません`);
+          issues.push(`[${id}] 単一選択ですがchoicesが空です`);
+        } else if (!q.choices.some((c) => normalize(c) === solNorm)) {
+          issues.push(`[${id}] 単一選択の選択肢にsolutionが含まれていません（正答不整合）`);
+          incorrectCount++;
         }
       }
-      // Rounding sanity: numeric solution should be number if rounding specified
+
+      // Rounding keyword expectation from content (correctness)
+      if (/最も近い整数/.test(content)) {
+        if (q.rounding !== "round") {
+          issues.push(`[${id}] 問題文に「最も近い整数」とあり、rounding=round が期待されます`);
+        }
+        if (Number.isFinite(solNum) && !Number.isInteger(solNum)) {
+          issues.push(`[${id}] 最も近い整数指定にも関わらずsolutionが整数ではありません（正答形式）`);
+          incorrectCount++;
+        }
+      }
+      if (/切上げ|切り上げ/.test(content)) {
+        if (q.rounding !== "ceil") {
+          issues.push(`[${id}] 問題文に「切上げ」があり、rounding=ceil が期待されます`);
+        }
+      }
+      if (/切下げ|切り下げ/.test(content)) {
+        if (q.rounding !== "floor") {
+          issues.push(`[${id}] 問題文に「切下げ」があり、rounding=floor が期待されます`);
+        }
+      }
+
+      // Rounding field sanity (structural/correctness)
       if (q.rounding) {
-        const num = Number(normalize(String(q.solution)));
-        if (Number.isNaN(num)) {
-          issues.push(`[${q.id}] rounding指定がありますがsolutionが数値に変換できません`);
+        if (Number.isNaN(solNum)) {
+          issues.push(`[${id}] rounding指定がありますがsolutionが数値に変換できません`);
+          incorrectCount++;
+        }
+      }
+
+      // Unit-based sanity for numeric answers (correctness heuristics)
+      const numericUnits = ["円", "個", "日", "%", "時間"];
+      if (q.unit && numericUnits.includes(q.unit)) {
+        if (Number.isNaN(solNum)) {
+          issues.push(`[${id}] 単位「${q.unit}」ですがsolutionが数値ではありません`);
+          incorrectCount++;
+        } else {
+          // For 円, allow negative values in NPV or price-change contexts
+          const allowNegativeYen = (q.category && q.category.includes("NPV")) || /NPV|デルタ|価格変化|変化|差異/.test(content);
+          if (
+            ((q.unit === "円" && !allowNegativeYen) || q.unit === "個" || q.unit === "日") &&
+            solNum <= 0
+          ) {
+            issues.push(`[${id}] 単位「${q.unit}」でsolutionが非正（0以下）です（要確認）`);
+          }
+          if (q.unit === "%" && (solNum < -1000 || solNum > 1000)) {
+            issues.push(`[${id}] 単位「%」で値が異常に大きい/小さい可能性（要確認）`);
+          }
+        }
+      }
+
+      // Heuristic: explanation should reference the final numeric (allow numeric-equivalent like 8 vs 8.0)
+      // Normalize: convert Unicode minus (U+2212) to ASCII '-' and remove commas before number extraction
+      const explNormalized = expl.replace(/[\u2212]/g, "-").replace(/[,，]/g, "");
+      const explNumbers = Array.from(explNormalized.matchAll(/-?\d+(?:\.\d+)?/g)).map((m) => m[0]);
+      if (explNumbers.length > 0) {
+        const solNumEq = Number(solNorm);
+        const hasExactText = explNumbers.includes(solNorm);
+        const hasNumericEq = Number.isFinite(solNumEq) && explNumbers.some((n) => Number(n) === solNumEq);
+        if (!hasExactText && !hasNumericEq) {
+          // do not count as incorrect automatically, but flag
+          issues.push(`[${id}] 解説内に最終解と同一の数値表記が見当たりません（表記揺れ/丸めの可能性、確認推奨）`);
+        }
+      }
+
+      // Category-specific light checks
+      if (q.category.includes("EOQ") || /EOQ/.test(content)) {
+        if (!Number.isNaN(solNum) && !Number.isInteger(solNum)) {
+          issues.push(`[${id}] EOQは通常整数。solutionが整数でない可能性（正答形式）`);
+          incorrectCount++;
         }
       }
     }
-    return { total: all.length, issues };
+
+    const total = all.length;
+    const incorrectPercent = total ? Math.round((incorrectCount / total) * 100) : 0;
+    return { total, issues, incorrectCount, incorrectPercent };
   }
 
   function normalize(v: string) {
@@ -137,7 +216,7 @@ export default function PracticeManagePage() {
       <div className="rounded-lg border border-neutral-800 p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-sm text-neutral-300">監査レポート</div>
-          <div className="text-xs text-neutral-400">全{audit.total}件中、不備 {audit.issues.length}件</div>
+          <div className="text-xs text-neutral-400">全{audit.total}件中、不備 {audit.issues.length}件 / 正答疑義 {audit.incorrectCount}件（{audit.incorrectPercent}%）</div>
         </div>
         {!audit.issues.length ? (
           <div className="text-emerald-400 text-sm">不備は見つかりませんでした。</div>

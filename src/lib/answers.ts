@@ -1,5 +1,5 @@
 import { db, usingMock } from "@/src/lib/firebase";
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, type QueryDocumentSnapshot, type DocumentData, type Timestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, updateDoc, doc, type QueryDocumentSnapshot, type DocumentData, type Timestamp } from "firebase/firestore";
 
 export type SavedAnswer = {
   id?: string; // firestore doc id (optional)
@@ -55,3 +55,28 @@ export async function listAnswers(uid: string | undefined): Promise<SavedAnswer[
   });
   return res;
 }
+
+// Update needsReview flag for a saved answer
+export async function updateNeedsReview(
+  uid: string | undefined,
+  key: { id?: string; questionId: string; answeredAt: number },
+  needsReview: boolean
+): Promise<boolean> {
+  if (usingMock) {
+    const storageKey = mockKey(uid);
+    const arr: SavedAnswer[] = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    const idx = arr.findIndex((a) => a.questionId === key.questionId && a.answeredAt === key.answeredAt);
+    if (idx >= 0) {
+      arr[idx] = { ...arr[idx], needsReview };
+      localStorage.setItem(storageKey, JSON.stringify(arr));
+      return true;
+    }
+    return false;
+  }
+  // Firestore: require document id for reliable update
+  if (!key.id) return false;
+  const ref = doc(db, "users", uid ?? "demo", "answers", key.id);
+  await updateDoc(ref, { needsReview });
+  return true;
+}
+
