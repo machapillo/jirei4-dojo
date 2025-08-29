@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { Suspense, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { useUserStore } from "@/src/store/user";
 import { listAnswers, updateNeedsReview, type SavedAnswer } from "@/src/lib/answers";
 import { getQuestions, type Question } from "@/src/lib/questionSource";
@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Route } from "next";
 
-export default function ReviewPage() {
+function ReviewPageInner() {
   const uid = useUserStore((s: UserState) => s.uid);
   const [items, setItems] = useState<SavedAnswer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -232,6 +232,14 @@ export default function ReviewPage() {
         </ul>
       )}
     </main>
+  );
+}
+
+export default function ReviewPage() {
+  return (
+    <Suspense fallback={<main className="container py-6"><p className="text-sm text-neutral-500">読み込み中...</p></main>}>
+      <ReviewPageInner />
+    </Suspense>
   );
 }
 
